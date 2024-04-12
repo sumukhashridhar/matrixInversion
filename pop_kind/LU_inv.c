@@ -1,6 +1,6 @@
 #include "LU_inv.h"
 
-void lu_decomposition(double* A, double* L, double* U, int N) {
+void lu_decomp(double* A, double* L, double* U, int N) {
     int i, j, k;
     double sum = 0.0;
 
@@ -46,7 +46,7 @@ void lu_decomposition(double* A, double* L, double* U, int N) {
 
 }
 
-void forward_substitution(double* L, double* b, double* y, int N) {
+void forward_sub(double* L, double* b, double* y, int N) {
     int i, j;
     double sum = 0.0;
 
@@ -59,7 +59,7 @@ void forward_substitution(double* L, double* b, double* y, int N) {
     }
 }
 
-void backward_substitution(double* U, double* y, double* x, int N) {
+void backward_sub(double* U, double* y, double* x, int N) {
     int i, j;
     double sum = 0.0;
 
@@ -75,12 +75,12 @@ void backward_substitution(double* U, double* y, double* x, int N) {
 void lu_invert_matrix(double* A, double* A_inv, int N) {
     int i, j;
 
-    double* L = (double*)malloc(N * N * sizeof(double));
-    double* U = (double*)malloc(N * N * sizeof(double));
-    double* y = (double*)malloc(N * sizeof(double));
-    double* e = (double*)malloc(N * sizeof(double));
+    double *L = (double*)malloc(N * N * sizeof(double));
+    double *U = (double*)malloc(N * N * sizeof(double));
+    double *y = (double*)malloc(N * sizeof(double));
+    double *e = (double*)malloc(N * sizeof(double));
 
-    lu_decomposition(A, L, U, N);
+    lu_decomp(A, L, U, N);
 
     for (i = 0; i < N; i++) {
         for (j = 0; j < N; j++) {
@@ -89,8 +89,8 @@ void lu_invert_matrix(double* A, double* A_inv, int N) {
             else
                 e[j] = 0.0;
         }
-        forward_substitution(L, e, y, N);
-        backward_substitution(U, y, &A_inv[i * N], N);
+        forward_sub(L, e, y, N);
+        backward_sub(U, y, &A_inv[i * N], N);
     }
 
     free(L);
