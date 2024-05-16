@@ -1,4 +1,4 @@
-#include "luTail.cuh"
+#include "luShared.cuh"
 
 int main() {
     FpType *A, *L, *U, *LU;
@@ -29,9 +29,9 @@ int main() {
     srand(time(NULL));
     for (i = 0; i < matrixSize; i++) {
         for (j = 0; j < matrixSize; j++) {
-            // fscanf(file, "%lf", &A[i * matrixSize + j]);
+            fscanf(file, "%lf", &A[i * matrixSize + j]);
             // A[i * matrixSize + j] = inputMatrix[i * matrixSize + j];
-            A[i * matrixSize + j] = rand() % 10 + 1;
+            // A[i * matrixSize + j] = rand() % 10 + 1;
             L[i * matrixSize + j] = 0.0;
             U[i * matrixSize + j] = 0.0;
         }
@@ -41,8 +41,10 @@ int main() {
     cudaMemcpy(d_L, L, numElements * sizeof(FpType), cudaMemcpyHostToDevice);
     cudaMemcpy(d_U, U, numElements * sizeof(FpType), cudaMemcpyHostToDevice);
 
+    int shMemSize = 3 * matrixSize * matrixSize * sizeof(FpType);
+
     startT = clock();
-    lu_decomp<<<1, numThreads>>>(d_A, d_L, d_U, matrixSize);
+    lu_decomp<<<1, numThreads, shMemSize>>>(d_A, d_L, d_U, matrixSize);
     endT = clock();
 
     cudaMemcpy(A, d_A, numElements * sizeof(FpType), cudaMemcpyDeviceToHost);
@@ -51,32 +53,32 @@ int main() {
 
     printf("Time taken: %f\n", (endT - startT) / CLOCKS_PER_SEC);
 
-    // print A
-    printf("Orig A:\n");
-    for (i = 0; i < matrixSize; i++) {
-        for (j = 0; j < matrixSize; j++) {
-            printf("%f ", A[i * matrixSize + j]);
-        }
-        printf("\n");
-    }
+    // // print A
+    // printf("Orig A:\n");
+    // for (i = 0; i < matrixSize; i++) {
+    //     for (j = 0; j < matrixSize; j++) {
+    //         printf("%f ", A[i * matrixSize + j]);
+    //     }
+    //     printf("\n");
+    // }
 
-    // print U
-    printf("U:\n");
-    for (i = 0; i < matrixSize; i++) {
-        for (j = 0; j < matrixSize; j++) {
-            printf("%f ", U[i * matrixSize + j]);
-        }
-        printf("\n");
-    }
+    // // print U
+    // printf("U:\n");
+    // for (i = 0; i < matrixSize; i++) {
+    //     for (j = 0; j < matrixSize; j++) {
+    //         printf("%f ", U[i * matrixSize + j]);
+    //     }
+    //     printf("\n");
+    // }
 
-    // print L
-    printf("L:\n");
-    for (i = 0; i < matrixSize; i++) {
-        for (j = 0; j < matrixSize; j++) {
-            printf("%f ", L[i * matrixSize + j]);
-        }
-        printf("\n");
-    }
+    // // print L
+    // printf("L:\n");
+    // for (i = 0; i < matrixSize; i++) {
+    //     for (j = 0; j < matrixSize; j++) {
+    //         printf("%f ", L[i * matrixSize + j]);
+    //     }
+    //     printf("\n");
+    // }
 
     // multipy L and U to check if A = LU
     for (i = 0; i < matrixSize; i++) {
