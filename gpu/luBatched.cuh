@@ -8,16 +8,15 @@
 
 typedef double FpType;
 
-__device__ void comp_U(FpType* A, int rowIdx, int threadNum, int matrixSize) {
+__device__ void comp_U(FpType* A, FpType* L, FpType* U, int rowIdx, int threadNum, int offset, int matrixSize) {
     if (threadNum >= rowIdx && threadNum < matrixSize) {
-        int l = 0;
         FpType sum = 0.0;
 
         #pragma unroll
-        for (l = 0; l < rowIdx; l++) {
-            sum += A[rowIdx * matrixSize + l] * A[l * matrixSize + threadNum]; 
+        for (int l = 0; l < rowIdx; l++) {
+            sum += L[(rowIdx * matrixSize) + offset + l] * U[(l * matrixSize) + offset + threadNum];
         }
-        A[rowIdx * matrixSize + threadNum] = A[rowIdx * matrixSize + threadNum] - sum;
+        U[(rowIdx * matrixSize) + offset + threadNum] = A[(rowIdx * matrixSize) + offset + threadNum] - sum;
     }
 
     else {
@@ -25,16 +24,21 @@ __device__ void comp_U(FpType* A, int rowIdx, int threadNum, int matrixSize) {
     }
 }
 
-__device__ void comp_L(FpType* A, int rowIdx, int threadNum, int matrixSize) {
-    if (threadNum > rowIdx && threadNum < matrixSize) {
-        int l = 0;
+__device__ void comp_L(FpType* A, FpType* L, FpType* U, int rowIdx, int threadNum, int offset, int matrixSize) {
+    if (threadNum >= rowIdx && threadNum < matrixSize) {
         FpType sum = 0.0;
 
-        #pragma unroll
-        for (l = 0; l < rowIdx; l++) {
-            sum += A[threadNum * matrixSize + l] * A[l * matrixSize + rowIdx];
+        if (rowIdx==threadNum) {
+            L[(threadNum * matrixSize) + offset + threadNum] = 1.0;
         }
-        A[threadNum * matrixSize + rowIdx] = (A[threadNum * matrixSize + rowIdx] - sum) / A[rowIdx * matrixSize + rowIdx];
+        
+        else {
+            #pragma unroll
+            for (int l = 0; l < rowIdx; l++) {
+                sum += L[(threadNum * matrixSize) + offset + l] * U[(l * matrixSize) + offset + rowIdx];
+            }
+            L[(threadNum * matrixSize) + offset + rowIdx] = (A[(threadNum * matrixSize) + offset + rowIdx] - sum) / U[(rowIdx * matrixSize) + offset + rowIdx];
+        }
     }
 
     else {
@@ -42,34 +46,29 @@ __device__ void comp_L(FpType* A, int rowIdx, int threadNum, int matrixSize) {
     }
 }
 
-__global__ void lu_decomp(FpType* A, int matrixSize) {
+__global__ void batched_lu(FpType* A, FpType* L, FpType* U, int matrixSize, int numMatrices) {
+    int blockNum = blockIdx.x;
 
-    extern __shared__ FpType shmem[];
-    FpType *sh_A = &shmem[0];
+    if (blockNum >= 0 && blockNum < numMatrices) { 
+        int numElements = matrixSize * matrixSize;
+        int offset = blockNum * numElements;
 
-    for (int k = threadIdx.x; k < matrixSize * matrixSize; k += blockDim.x) {
-        sh_A[k] = A[k];
+        for (int rowIdx = 0; rowIdx < matrixSize; rowIdx++) {
+            for (int threadNum = threadIdx.x; threadNum < matrixSize; threadNum += blockDim.x) {
+                comp_U(A, L, U, rowIdx, threadNum, offset, matrixSize);
+            }
+
+            __syncthreads();
+
+            for (int threadNum = threadIdx.x; threadNum < matrixSize; threadNum += blockDim.x) {
+                comp_L(A, L, U, rowIdx, threadNum, offset, matrixSize);
+            }
+
+            __syncthreads();
+        }
+
     }
 
     __syncthreads();
 
-    for (int rowIdx = 0; rowIdx < matrixSize; rowIdx++) {
-        for (int threadNum = threadIdx.x; threadNum < matrixSize; threadNum += blockDim.x) {
-            comp_U(sh_A, rowIdx, threadNum, matrixSize);
-        }
-
-        __syncthreads();
-
-        for (int threadNum = threadIdx.x; threadNum < matrixSize; threadNum += blockDim.x) {
-            comp_L(sh_A, rowIdx, threadNum, matrixSize);
-        }
-
-        __syncthreads();
-    }
-
-    for (int k = threadIdx.x; k < matrixSize * matrixSize; k += blockDim.x) {
-        A[k] = sh_A[k];
-    }
-
-    __syncthreads();
 }
