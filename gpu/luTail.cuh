@@ -47,7 +47,29 @@ __device__ void comp_L(FpType* A, FpType* L, FpType* U, int rowIdx, int threadNu
     }
 }
 
-__global__ void lu_decomp(FpType* A, FpType* L, FpType* U, int matrixSize) {
+__device__ void forward_sub(FpType* L, FpType* e, FpType* y, int matrixSize) {
+    for (int i = 0; i < matrixSize; i++) {
+        FpType sum = 0.0;
+        #pragma unroll
+        for (int j = 0; j < i; j++) {
+            sum += L[i * matrixSize + j] * y[j];
+        }
+        y[i] = (e[i] - sum) / L[i * matrixSize + i];
+    }
+}
+
+__device__ void backward_sub(FpType* U, FpType* y, FpType* A_inv, int matrixSize) {
+    for (int i = matrixSize - 1; i >= 0; i--) {
+        FpType sum = 0.0;
+        #pragma unroll
+        for (int j = i + 1; j < matrixSize; j++) {
+            sum += U[i * matrixSize + j] * A_inv[j];
+        }
+        A_inv[i] = (y[i] - sum) / U[i * matrixSize + i];
+    }
+}
+
+__global__ void lu_decomp(FpType* A, FpType* L, FpType* U, FpType* e, FpType* y, FpType* A_inv, int matrixSize) {
     
     for (int rowIdx = 0; rowIdx < matrixSize; rowIdx++) {
         for (int j = threadIdx.x; j < matrixSize; j += blockDim.x) {
@@ -62,4 +84,12 @@ __global__ void lu_decomp(FpType* A, FpType* L, FpType* U, int matrixSize) {
 
         __syncthreads();
     }
+
+    for (int rowIdx = threadIdx.x; rowIdx < matrixSize; rowIdx =+ blockDim.x) {
+        // e[rowIdx * matrixSize + rowIdx] = 1.0;
+        forward_sub(L, &e[rowIdx * matrixSize], &y[rowIdx * matrixSize], matrixSize);
+        backward_sub(U, &y[rowIdx * matrixSize], &A_inv[rowIdx * matrixSize], matrixSize);
+    }
+
+    __syncthreads();
 }
