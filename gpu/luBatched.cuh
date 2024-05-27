@@ -46,6 +46,40 @@ __device__ void comp_L(FpType* A, FpType* L, FpType* U, int rowIdx, int threadNu
     }
 }
 
+__device__ void forward_sub(FpType* L, FpType* e, FpType* y, int rowIdx, int matrixSize) {
+    if (rowIdx < matrixSize) {
+        for (int i = 0; i < matrixSize; i++) {
+            FpType sum = 0.0;
+            #pragma unroll
+            for (int j = 0; j < i; j++) {
+                sum += L[i * matrixSize + j] * y[j];
+            }
+            y[i] = (e[i] - sum) / L[i * matrixSize + i];
+        }
+    }
+
+    else {
+        return;
+    }
+}
+
+__device__ void backward_sub(FpType* U, FpType* y, FpType* A_inv, int rowIdx, int matrixSize) {
+    if (rowIdx < matrixSize) {
+        for (int i = matrixSize - 1; i >= 0; i--) {
+            FpType sum = 0.0;
+            #pragma unroll
+            for (int j = i + 1; j < matrixSize; j++) {
+                sum += U[i * matrixSize + j] * A_inv[j];
+            }
+            A_inv[i] = (y[i] - sum) / U[i * matrixSize + i];
+        }
+    }
+
+    else {
+        return;
+    }
+}
+
 __global__ void batched_lu(FpType* A, FpType* L, FpType* U, int matrixSize, int numMatrices) {
     int blockNum = blockIdx.x;
 
@@ -66,6 +100,15 @@ __global__ void batched_lu(FpType* A, FpType* L, FpType* U, int matrixSize, int 
 
             __syncthreads();
         }
+
+    // for (int rowIdx = threadIdx.x; rowIdx < matrixSize; rowIdx += blockDim.x) {
+    //     if (rowIdx < matrixSize) {
+    //         forward_sub(L, &e[rowIdx * matrixSize], &y[rowIdx * matrixSize], rowIdx, matrixSize);
+    //         backward_sub(U, &y[rowIdx * matrixSize], &A_inv[rowIdx * matrixSize], rowIdx, matrixSize);
+    //     }   
+    // }
+
+    // __syncthreads();
 
     }
 
