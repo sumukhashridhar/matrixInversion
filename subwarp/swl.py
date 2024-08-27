@@ -2,9 +2,8 @@ import numpy as np
 
 
 def calc_swl_idx_lei(k, matrixSize, numElements):
-    num = np.float32(0.0)
-    size_fp32 = num.nbytes
-    swl_size = matrixSize * size_fp32
+    size_fp32 = np.float32(0.0).nbytes
+    swl_size = numElements * size_fp32
     y_c = (k * size_fp32) // swl_size
     x_c = (k * size_fp32) % swl_size
 
@@ -15,17 +14,19 @@ def calc_swl_idx_lei(k, matrixSize, numElements):
 
     return x_swz
 
-matrixSize = 8
-numElements = matrixSize * matrixSize
-a = np.arange(numElements)
+matrixSize = 32
+numElements = matrixSize * 2
+a = np.arange(matrixSize)
+# make a 2D matrix of size matrixSize x matrixSize
+a = np.tile(a, 2)
 
 # print a as 2D matrix
 print("Input matrix:")
-print(a.reshape(matrixSize, matrixSize))
+print(a.reshape(2, matrixSize))
 
-swl_idx = [calc_swl_idx_lei(k, matrixSize, numElements) for k in a]
+swl_idx = [calc_swl_idx_lei(k, matrixSize, numElements) for k in a.reshape(2, matrixSize)]
 
 # print swl_idx as 2D matrix
 print("\n")
 print("SWL idx matrix:")
-print(np.array(swl_idx).reshape(matrixSize, matrixSize))
+print(np.array(swl_idx).reshape(2, matrixSize))

@@ -96,16 +96,24 @@ __device__ int calc_swl_idx(int k, int matrixSize, int numElements) {
     return newIdx;   
 }
 
-__device__ int calc_swl_idx_lei(int k, int matrixSize, int numElements) {
-    int swl_size = matrixSize * sizeof(FpType);
-    int y_c = (k * sizeof(FpType)) / swl_size;
-    int x_c = (k * sizeof(FpType)) % swl_size;
+__device__ int calc_swl_idx_lei(int k, int matrixSize, int matrixIdInBlock, int numElements) {
+    // int swl_size = matrixSize * sizeof(FpType);
+    // int y_c = (k * sizeof(FpType)) / swl_size;
+    // int x_c = (k * sizeof(FpType)) % swl_size;
 
-    int x_c_swl = y_c ^ x_c;
-    // x_swz = x_chunk_swz × sizeof(TC) / sizeof(T) % NX + x % (sizeof(TC) / sizeof(T))
-    int x_swz = (x_c_swl * sizeof(FpType) * matrixSize) / sizeof(FpType) % numElements + k % (sizeof(FpType) * matrixSize / sizeof(FpType));
+    // int x_c_swl = y_c ^ x_c;
+    // // x_swz = x_chunk_swz × sizeof(TC) / sizeof(T) % NX + x % (sizeof(TC) / sizeof(T))
+    // int x_swz = (x_c_swl * sizeof(FpType) * matrixSize) / sizeof(FpType) % numElements + k % (sizeof(FpType) * matrixSize / sizeof(FpType));
 
-    printf("oldIdx: %d newIdx: %d\n", k, x_swz);
+    int row = k / matrixSize;
+    int col = k % matrixSize;
+    int x_swz = (col ^ row) + (matrixIdInBlock * numElements);
+    // int x_swz = (row * matrixSize + ((col + (row % 32)) % matrixSize));
+    if (matrixIdInBlock > 0) {
+        // x_swz += matrixIdInBlock * matrixSize;
+        printf("oldIdx: %d newIdx: %d\n", k, x_swz);
+    }
+    // printf("oldIdx: %d newIdx: %d\n", k, x_swz);
 
     return x_swz;
 }
@@ -113,24 +121,27 @@ __device__ int calc_swl_idx_lei(int k, int matrixSize, int numElements) {
 
 template<typename T>
 __global__ void batched_lu_subwarp(T* A, int matrixSize, int numMatrices, int threadsPerMatrix, int matricesPerBlock) {
-    int blockNum = blockIdx.x;
-    int threadIdInBlock = threadIdx.x;
-    int matrixIdInBlock = threadIdInBlock / threadsPerMatrix;
-    int globalMatrixId = blockNum * matricesPerBlock + matrixIdInBlock;
+    // int blockNum = blockIdx.x;
+    // int threadIdInBlock = threadIdx.x;
+    // int matrixIdInBlock =  threadIdx.x / threadsPerMatrix;
+    int globalMatrixId = (blockIdx.x * matricesPerBlock) + (threadIdx.x / threadsPerMatrix);
 
     if (globalMatrixId < numMatrices) {
-        int threadIdInMatrix = threadIdInBlock % threadsPerMatrix;
+        int threadIdInMatrix =  threadIdx.x % threadsPerMatrix;
         int numElements = matrixSize * matrixSize;
         int mtrxOffset = globalMatrixId * numElements;
         
         extern __shared__ T shmem[];
-        T *sh_A = &shmem[matrixIdInBlock * (numElements+1)];
+        T *sh_A = &shmem[(threadIdx.x / threadsPerMatrix) * (numElements)];
 
         for (int k = threadIdInMatrix; k < numElements; k += threadsPerMatrix) {
-            // int swl_idx = calc_swl_idx_lei(k, matrixSize, numElements);
+            // int swl_idx = calc_swl_idx_lei(k, matrixSize, matrixIdInBlock, numElements);
+            sh_A[k] = A[k + mtrxOffset];
             // int swl_idx = calc_swl_idx(k, matrixSize, numElements);
             // printf("swz_idx: %d, k: %d\n", swz_idx, k);
-            sh_A[k] = (A[k + mtrxOffset]);
+            // use lgds to avoid bank conflicts
+            // sh_A[k] = (A[k + mtrxOffset]);
+            // sh_A[k] = __ldg(&A[k + mtrxOffset]);
             // printf("sh_A[%d]: %f\n", k + bankOffset, sh_A[k + bankOffset]);
         }
         __syncthreads();
@@ -153,9 +164,11 @@ __global__ void batched_lu_subwarp(T* A, int matrixSize, int numMatrices, int th
         __syncthreads();
 
         for (int k = threadIdInMatrix; k < numElements; k += threadsPerMatrix) {
-            // int swl_idx = calc_swl_idx_lei(k, matrixSize, numElements);
-            // asm volatile("st.global.cg.f32 [%0], %1;" : : "l"(&A[k + mtrxOffset]) , "f"(sh_A[swl_idx]));
+            // int swl_idx = calc_swl_idx_lei(k, matrixSize, matrixIdInBlock, numElements);
             A[k + mtrxOffset] = sh_A[k];
+            // asm volatile("st.global.cg.f32 [%0], %1;" : : "l"(&A[k + mtrxOffset]) , "f"(sh_A[swl_idx]));
+            // asm volatile("st.global.cg.f32 [%0], %1;" : : "l"(&A[k + mtrxOffset]) , "f"(sh_A[k]));
+            // A[k + mtrxOffset] = sh_A[k];
         }
     }
     __syncwarp();
