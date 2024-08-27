@@ -108,8 +108,13 @@ __device__ int calc_swl_idx_lei(int k, int matrixSize, int matrixIdInBlock, int 
     int row = k / matrixSize;
     int col = k % matrixSize;
     int x_swz = (col ^ row) + (matrixIdInBlock * numElements);
+
+    if (int(k / matrixSize) > 0) {
+        x_swz += matrixSize * (k / matrixSize);
+    }
+
     // int x_swz = (row * matrixSize + ((col + (row % 32)) % matrixSize));
-    if (matrixIdInBlock > 0) {
+    if (k % 7 == 0 && matrixIdInBlock == 0) {
         // x_swz += matrixIdInBlock * matrixSize;
         printf("oldIdx: %d newIdx: %d\n", k, x_swz);
     }
@@ -135,8 +140,9 @@ __global__ void batched_lu_subwarp(T* A, int matrixSize, int numMatrices, int th
         T *sh_A = &shmem[(matrixIdInBlock) * (numElements+1)];
 
         for (int k = threadIdInMatrix; k < numElements; k += threadsPerMatrix) {
-            // int swl_idx = calc_swl_idx_lei(k, matrixSize, matrixIdInBlock, numElements);
-            sh_A[k] = A[k + mtrxOffset];
+            int swl_idx = calc_swl_idx_lei(k, matrixSize, matrixIdInBlock, numElements);
+            sh_A[swl_idx] = A[k + mtrxOffset];
+            // sh_A[k] = A[k + mtrxOffset];
             // int swl_idx = calc_swl_idx(k, matrixSize, numElements);
             // printf("swz_idx: %d, k: %d\n", swz_idx, k);
             // use lgds to avoid bank conflicts
@@ -164,8 +170,9 @@ __global__ void batched_lu_subwarp(T* A, int matrixSize, int numMatrices, int th
         __syncthreads();
 
         for (int k = threadIdInMatrix; k < numElements; k += threadsPerMatrix) {
-            // int swl_idx = calc_swl_idx_lei(k, matrixSize, matrixIdInBlock, numElements);
-            A[k + mtrxOffset] = sh_A[k];
+            int swl_idx = calc_swl_idx_lei(k, matrixSize, matrixIdInBlock, numElements);
+            A[k + mtrxOffset] = sh_A[swl_idx];
+            // A[k + mtrxOffset] = sh_A[k];
             // asm volatile("st.global.cg.f32 [%0], %1;" : : "l"(&A[k + mtrxOffset]) , "f"(sh_A[swl_idx]));
             // asm volatile("st.global.cg.f32 [%0], %1;" : : "l"(&A[k + mtrxOffset]) , "f"(sh_A[k]));
             // A[k + mtrxOffset] = sh_A[k];

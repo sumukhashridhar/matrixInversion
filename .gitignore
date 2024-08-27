@@ -5,3 +5,9 @@
 a.out
 custom
 benchmark
+
+# object files
+*.o
+
+# csv files
+*.csv
