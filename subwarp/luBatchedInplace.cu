@@ -7,7 +7,7 @@ int main() {
     std::cin >> matrixSize;
     std::cout << "Enter number of matrices: ";
     std::cin >> numMatrices;
-    std::cout << "Enter number of threads: ";
+    std::cout << "Enter number of threads in a block: ";
     std::cin >> numThreads;
     // numThreads = 32;
     int threadsPerMatrix = 8;

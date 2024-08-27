@@ -10,7 +10,7 @@ using FpType = float;
 #define CUBLAS_CHECK(call) { cublasStatus_t status = call; if (status != CUBLAS_STATUS_SUCCESS) { printf("cuBLAS error: %d, line %d\n", status, __LINE__); exit(1); } }
 
 const int BATCH_SIZE = 1000000;
-const int N = 32; // 8x8 matrices
+const int N = 8; // 8x8 matrices
 
 // Helper function to initialize a matrix with random values
 void initializeMatrix(FpType* matrix, int n) {

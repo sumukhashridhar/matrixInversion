@@ -1,2 +1,7 @@
 # cuda profiling files
 *.ncu-rep
+
+# executables
+a.out
+custom
+benchmark

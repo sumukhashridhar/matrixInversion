@@ -121,18 +121,18 @@ __device__ int calc_swl_idx_lei(int k, int matrixSize, int matrixIdInBlock, int 
 
 template<typename T>
 __global__ void batched_lu_subwarp(T* A, int matrixSize, int numMatrices, int threadsPerMatrix, int matricesPerBlock) {
-    // int blockNum = blockIdx.x;
-    // int threadIdInBlock = threadIdx.x;
-    // int matrixIdInBlock =  threadIdx.x / threadsPerMatrix;
-    int globalMatrixId = (blockIdx.x * matricesPerBlock) + (threadIdx.x / threadsPerMatrix);
+    int blockNum = blockIdx.x;
+    int threadIdInBlock = threadIdx.x;
+    int matrixIdInBlock =  threadIdInBlock / threadsPerMatrix;
+    int globalMatrixId = (blockNum * matricesPerBlock) + (matrixIdInBlock);
 
     if (globalMatrixId < numMatrices) {
-        int threadIdInMatrix =  threadIdx.x % threadsPerMatrix;
+        int threadIdInMatrix =  threadIdInBlock % threadsPerMatrix;
         int numElements = matrixSize * matrixSize;
         int mtrxOffset = globalMatrixId * numElements;
         
         extern __shared__ T shmem[];
-        T *sh_A = &shmem[(threadIdx.x / threadsPerMatrix) * (numElements)];
+        T *sh_A = &shmem[(matrixIdInBlock) * (numElements+1)];
 
         for (int k = threadIdInMatrix; k < numElements; k += threadsPerMatrix) {
             // int swl_idx = calc_swl_idx_lei(k, matrixSize, matrixIdInBlock, numElements);
