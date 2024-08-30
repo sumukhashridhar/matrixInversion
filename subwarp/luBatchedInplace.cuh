@@ -78,32 +78,7 @@ __device__ void inversion(T* A, int rowIdx, int matrixSize) {
 }
 
 
-// template<typename T>
-__device__ int calc_swl_idx(int k, int matrixSize, int numElements) {
-    // impl has div and mod, expnsve on GPU
-    // int count = k / matrixSize;
-    // printf("count is: %d\n", count);
-    
-    int newIdx = (k * matrixSize) % numElements + (k / matrixSize);
-
-    // printf("oldIdx: %d newIdx: %d\n", k, newIdx);
-    // int bankSize = 32;
-    // int row = k / matrixSize;
-    // int col = k % matrixSize;
-
-    // int newIdx = (row * matrixSize + ((col + (row % bankSize)) % matrixSize)); 
-
-    return newIdx;   
-}
-
 __device__ int calc_swl_idx_lei(int k, int matrixSize, int matrixIdInBlock, int numElements) {
-    // int swl_size = matrixSize * sizeof(FpType);
-    // int y_c = (k * sizeof(FpType)) / swl_size;
-    // int x_c = (k * sizeof(FpType)) % swl_size;
-
-    // int x_c_swl = y_c ^ x_c;
-    // // x_swz = x_chunk_swz × sizeof(TC) / sizeof(T) % NX + x % (sizeof(TC) / sizeof(T))
-    // int x_swz = (x_c_swl * sizeof(FpType) * matrixSize) / sizeof(FpType) % numElements + k % (sizeof(FpType) * matrixSize / sizeof(FpType));
 
     int row = k / matrixSize;
     int col = k % matrixSize;
@@ -113,12 +88,9 @@ __device__ int calc_swl_idx_lei(int k, int matrixSize, int matrixIdInBlock, int 
         x_swz += matrixSize * (k / matrixSize);
     }
 
-    // int x_swz = (row * matrixSize + ((col + (row % 32)) % matrixSize));
-    if (k % 7 == 0 && matrixIdInBlock == 0) {
-        // x_swz += matrixIdInBlock * matrixSize;
-        printf("oldIdx: %d newIdx: %d\n", k, x_swz);
-    }
-    // printf("oldIdx: %d newIdx: %d\n", k, x_swz);
+    // if (k % 7 == 0 && matrixIdInBlock == 0) {
+    //     printf("oldIdx: %d newIdx: %d\n", k, x_swz);
+    // }
 
     return x_swz;
 }
@@ -137,12 +109,12 @@ __global__ void batched_lu_subwarp(T* A, int matrixSize, int numMatrices, int th
         int mtrxOffset = globalMatrixId * numElements;
         
         extern __shared__ T shmem[];
-        T *sh_A = &shmem[(matrixIdInBlock) * (numElements+1)];
+        T *sh_A = &shmem[0];
 
         for (int k = threadIdInMatrix; k < numElements; k += threadsPerMatrix) {
-            int swl_idx = calc_swl_idx_lei(k, matrixSize, matrixIdInBlock, numElements);
-            sh_A[swl_idx] = A[k + mtrxOffset];
-            // sh_A[k] = A[k + mtrxOffset];
+            // int swl_idx = calc_swl_idx_lei(k, matrixSize, matrixIdInBlock, numElements);
+            // sh_A[swl_idx] = A[k + mtrxOffset];
+            sh_A[k] = A[k + mtrxOffset];
             // int swl_idx = calc_swl_idx(k, matrixSize, numElements);
             // printf("swz_idx: %d, k: %d\n", swz_idx, k);
             // use lgds to avoid bank conflicts
@@ -170,9 +142,9 @@ __global__ void batched_lu_subwarp(T* A, int matrixSize, int numMatrices, int th
         __syncthreads();
 
         for (int k = threadIdInMatrix; k < numElements; k += threadsPerMatrix) {
-            int swl_idx = calc_swl_idx_lei(k, matrixSize, matrixIdInBlock, numElements);
-            A[k + mtrxOffset] = sh_A[swl_idx];
-            // A[k + mtrxOffset] = sh_A[k];
+            // int swl_idx = calc_swl_idx_lei(k, matrixSize, matrixIdInBlock, numElements);
+            // A[k + mtrxOffset] = sh_A[swl_idx];
+            A[k + mtrxOffset] = sh_A[k];
             // asm volatile("st.global.cg.f32 [%0], %1;" : : "l"(&A[k + mtrxOffset]) , "f"(sh_A[swl_idx]));
             // asm volatile("st.global.cg.f32 [%0], %1;" : : "l"(&A[k + mtrxOffset]) , "f"(sh_A[k]));
             // A[k + mtrxOffset] = sh_A[k];

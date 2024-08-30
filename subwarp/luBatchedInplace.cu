@@ -10,7 +10,7 @@ int main() {
     std::cout << "Enter number of threads in a block: ";
     std::cin >> numThreads;
     // numThreads = 32;
-    int threadsPerMatrix = 8;
+    int threadsPerMatrix = matrixSize;
     int matricesPerBlock = numThreads / threadsPerMatrix;
     int numBlocks = numMatrices / matricesPerBlock;
 
