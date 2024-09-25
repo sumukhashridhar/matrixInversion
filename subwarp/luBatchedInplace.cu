@@ -38,6 +38,8 @@ int main() {
         file.close();
     }
 
+    // printMatrices(A, matrixSize, numMatrices);
+
     CUDA_CHECK(cudaMemcpy(d_A, A.data(), numElements * sizeof(FpType), cudaMemcpyHostToDevice));
     std::cout << "Data copied to device." << '\n';
 

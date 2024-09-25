@@ -9,8 +9,8 @@ using FpType = float;
 #define CUDA_CHECK(call) { cudaError_t err = call; if (err != cudaSuccess) { printf("CUDA error: %s, line %d\n", cudaGetErrorString(err), __LINE__); exit(1); } }
 #define CUBLAS_CHECK(call) { cublasStatus_t status = call; if (status != CUBLAS_STATUS_SUCCESS) { printf("cuBLAS error: %d, line %d\n", status, __LINE__); exit(1); } }
 
-const int BATCH_SIZE = 1000000;
-const int N = 8; // 8x8 matrices
+// const int BATCH_SIZE = 1000000;
+// const int N = 8; // 8x8 matrices
 
 // Helper function to initialize a matrix with random values
 void initializeMatrix(FpType* matrix, int n) {
@@ -25,6 +25,13 @@ void initializeMatrix(FpType* matrix, int n) {
 int main() {
     cublasHandle_t handle;
     CUBLAS_CHECK(cublasCreate(&handle));
+
+    int BATCH_SIZE, N;
+
+    std::cout << "Enter batch size: ";
+    std::cin >> BATCH_SIZE;
+    std::cout << "Enter matrix size: ";
+    std::cin >> N;
 
     // Host memory
     std::vector<FpType*> h_A(BATCH_SIZE);
