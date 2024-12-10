@@ -66,8 +66,12 @@ __device__ __forceinline__ void comp_L(T* A, int rowIdx, int threadNum, int matr
 
 
 template<typename T>
-__device__ __forceinline__ void inversion(T* A, int rowIdx, int matrixSize, int swzOffset) {
+__device__ __forceinline__ void inversion(T* A, int colIdx, int matrixSize, int swzOffset) {
         T y[32];
+
+        for (int i = 0; i < matrixSize; i++) {
+            y[i] = static_cast<T>(0.0);
+        }
 
         // forward substitution
         #pragma unroll
@@ -77,24 +81,33 @@ __device__ __forceinline__ void inversion(T* A, int rowIdx, int matrixSize, int 
             for (int j = 0; j < i; j++) {
                 sum += A[calc_swl_idx_lei((i * matrixSize) + j, matrixSize, swzOffset)] * y[j];
             }
-            y[i] = (((i == rowIdx) ? static_cast<T>(1.0) : static_cast<T>(0.0)) - sum);
+            // printf("sum from forward: %f, i: %d, colIdx: %d\n", sum, i, colIdx);
+            y[i] = (((i == colIdx) ? static_cast<T>(1.0) : static_cast<T>(0.0)) - sum);
         }
+
+        // print y
+        // for (int i = 0; i < matrixSize; i++) {
+        //     printf("%f ", y[i]);
+        // }
 
         // backward substitution
         #pragma unroll
-        for (int i = matrixSize - 1; i >= 0; i--) {
+        for (int i = matrixSize-1; i >= 0; i--) {
             T sum = static_cast<T>(0.0);
             #pragma unroll
-            for (int j = i + 1; j < matrixSize; j++) {
-                sum += A[calc_swl_idx_lei((i * matrixSize) + j, matrixSize, swzOffset)] * A[calc_swl_idx_lei((j * matrixSize) + rowIdx, matrixSize, swzOffset)];
+            for (int j = i+1; j < matrixSize; j++) {
+                sum += A[calc_swl_idx_lei((i * matrixSize) + j, matrixSize, swzOffset)] * A[calc_swl_idx_lei((j * matrixSize) + colIdx, matrixSize, swzOffset)];
             }
-            A[calc_swl_idx_lei((i * matrixSize) + rowIdx, matrixSize, swzOffset)] = (y[i] - sum) / A[calc_swl_idx_lei((i * matrixSize) + i, matrixSize, swzOffset)];
+            // print sum
+            // printf("sum from backward: %f, i: %d, colIdx: %d\n", sum, i, colIdx);
+            A[calc_swl_idx_lei((i * matrixSize) + colIdx, matrixSize, swzOffset)] = (y[i] - sum) / A[calc_swl_idx_lei((i * matrixSize) + i, matrixSize, swzOffset)];
+    
         }
 }
 
 
-template<typename T>
-__global__ void batched_lu_subwarp(T* A, int matrixSize, int numMatrices, int threadsPerMatrix, int matricesPerBlock) {
+template<typename T, int matrixSize=32, int threadsPerMatrix, int matricesPerBlock, int numMatrices=1000>
+__global__ void batched_lu_subwarp(T* A) {
     int matrixIdInBlock =  threadIdx.x / threadsPerMatrix;
     int globalMatrixId = (blockIdx.x * matricesPerBlock) + (matrixIdInBlock);
 
@@ -130,8 +143,9 @@ __global__ void batched_lu_subwarp(T* A, int matrixSize, int numMatrices, int th
             tile.sync();
         }
 
-        for (int rowIdx = threadIdInMatrix; rowIdx < matrixSize; rowIdx += threadsPerMatrix) {
-            inversion(sh_A, rowIdx, matrixSize, (matrixIdInBlock * numElements));
+        for (int colIdx = threadIdInMatrix; colIdx < matrixSize; colIdx += threadsPerMatrix) {
+            inversion(sh_A, colIdx, matrixSize, (matrixIdInBlock * numElements));
+            // __syncthread();
         }
         tile.sync();
 
