@@ -85,13 +85,13 @@ int main() {
     CUDA_CHECK(cudaMemcpy(h_invA[0], d_invA[0], N * N * sizeof(FpType), cudaMemcpyDeviceToHost));
 
     // Print the first inverted matrix
-    // std::cout << "First inverted matrix:" << std::endl;
-    // for (int i = 0; i < N; ++i) {
-    //     for (int j = 0; j < N; ++j) {
-    //         std::cout << h_invA[0][i * N + j] << " ";
-    //     }
-    //     std::cout << std::endl;
-    // }
+    std::cout << "First inverted matrix:" << std::endl;
+    for (int i = 0; i < N; ++i) {
+        for (int j = 0; j < N; ++j) {
+            std::cout << h_invA[0][i * N + j] << " ";
+        }
+        std::cout << std::endl;
+    }
 
     // Clean up
     CUBLAS_CHECK(cublasDestroy(handle));

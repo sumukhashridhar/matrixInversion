@@ -18,8 +18,8 @@ def get_2d_index(index, cols):
     # return (row, col)
 
 # Example usage
-cols = 8
-rows = 8
+cols = 16
+rows = 16
 orig_lst = []
 swl_lst = []
 for i in range(cols * rows):

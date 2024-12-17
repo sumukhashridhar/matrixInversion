@@ -5,7 +5,7 @@
 #include <device_launch_parameters.h>
 #include <cooperative_groups.h>
 
-#include "verify.hpp"
+#include "managedMem_verify.hpp"
 
 namespace cg = cooperative_groups;
 
@@ -73,7 +73,7 @@ __device__ __forceinline__ void inversion(T* A, int colIdx, int matrixSize) {
 
 
 template<typename T, int matrixSize, int threadsPerMatrix, int matricesPerBlock, int numMatrices>
-__global__ void batched_lu_subwarp(T* A) {
+__global__ void batched_lu_subwarp(T* A, T* A_inv) {
 
     int matrixIdInBlock =  threadIdx.x / threadsPerMatrix;
     int globalMatrixId = (blockIdx.x * matricesPerBlock) + (matrixIdInBlock);
@@ -95,7 +95,7 @@ __global__ void batched_lu_subwarp(T* A) {
         }
         matrix_group.sync();
 
-        #pragma unroll 8
+        #pragma unroll
         for (int rowIdx = 0; rowIdx < matrixSize; rowIdx++) {
             #pragma unroll
             for (int colIdx = rowIdx+threadIdInMatrix; colIdx < matrixSize; colIdx += threadsPerMatrix) {
@@ -118,7 +118,7 @@ __global__ void batched_lu_subwarp(T* A) {
 
         #pragma unroll
         for (int k = threadIdInMatrix; k < numElements; k += threadsPerMatrix) {
-            A[k + mtrxOffset] = sh_A[k];
+            A_inv[k + mtrxOffset] = sh_A[k];
         }
     }
 }
