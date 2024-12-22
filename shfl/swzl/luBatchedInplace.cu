@@ -17,7 +17,7 @@ int main() {
     std::cout << "Number of blocks: " << numBlocks << '\n';
 
     // FpType inputMatrix[] = {2, 3, 4, 5};//, 10, 4, 2, 4, 2};
-    //  FpType inputMatrix[] = {4, 11, 3, 4, 10, 4, 2, 4, 2};
+     FpType inputMatrix[] = {4, 11, 3, 4, 10, 4, 2, 4, 2};
     // FpType inputMatrix[] = {2, 7, 1, 5, 3, -2, 0, 1, 1, 5, 3, 4, 7, 3, 2, 8};
     // make input matrix as Identity matrix
     // FpType inputMatrix[] = {10, 0, 0, 0, 0, 10, 0, 0, 0, 0, 10, 0, 0, 0, 0, 10};
@@ -38,9 +38,6 @@ int main() {
             #pragma acc loop vector
             for (int i = 0; i < matrixSize; ++i) {
                 for (int j = 0; j < matrixSize; ++j) {
-                    // float temp;
-                    // file >> temp;
-                    // A[(i * matrixSize) + offset + j] = __float2half(temp);
                     file >> A[(i * matrixSize) + offset + j];
                     A_inv[(i * matrixSize) + offset + j] = static_cast<FpType>(0.0);
                 }

@@ -1,3 +1,4 @@
+import numpy as np
 import subprocess
 import os
 import time
@@ -7,15 +8,15 @@ from datetime import datetime
 
 def create_output_directories(timestamp: str) -> tuple:
     """Create directories for storing NCU profiles and runtime results."""
-    base_dir = os.path.join("benchmark_results", timestamp)
-    ncu_dir = os.path.join(base_dir, "ncu_profiles")
-    runtime_dir = os.path.join(base_dir, "runtime_results")
+    base_dir = os.path.join("cublas_results", timestamp)
+    cublas_dir = os.path.join(base_dir, "cublas_profiles")
+    runtime_dir = os.path.join(base_dir, "cublas_runtime_results")
     
     # Create directories
-    os.makedirs(ncu_dir, exist_ok=True)
+    os.makedirs(cublas_dir, exist_ok=True)
     os.makedirs(runtime_dir, exist_ok=True)
     
-    return base_dir, ncu_dir, runtime_dir
+    return base_dir, cublas_dir, runtime_dir
 
 
 def load_modules():
@@ -28,13 +29,12 @@ def load_modules():
     print("Loaded modules are: ", modules)
 
 
-def compile_cuda(matrix_size: int, num_matrices: int, num_threads: int) -> None:
+def compile_cublas(matrix_size: int, num_matrices: int) -> None:
     """Compile CUDA program with given parameters."""
     compile_command = [
-        "nvcc", "-O3",
-        f"-DMATRIXSIZE={matrix_size}",
-        f"-DNUMMATRICES={num_matrices}",
-        f"-DNUMTHREADS={num_threads}",
+        "nvcc", "-O3", "-lcublas",
+        f"-DINP_MATRIX_SIZE={matrix_size}",
+        f"-DINP_BATCH_SIZE={num_matrices}",
         "-g", # Generate debug info
         "--resource-usage", # Show resource usage for better optimization
         "--ptxas-options=-v", # Show PTXAS optimization details
@@ -78,15 +78,15 @@ def compile_cuda(matrix_size: int, num_matrices: int, num_threads: int) -> None:
         # "--disable-warnings",  # Disable warnings that might prevent aggressive optimization
         "-t", "0",  # Maximum template instantiation depth
         # "--constant-fold-aggressive",  # Aggressive constant folding for templates
-        "luBatchedInplace.cu",
-        "-o", "custom"
+        "benchmark.cu",
+        "-o", "benchmark"
     ]
     subprocess.run(compile_command, check=True)
 
-def run_ncu_profile(matrix_size: int, num_matrices: int, num_threads: int, ncu_dir: str) -> None:
+def run_ncu_profile(matrix_size: int, num_matrices: int, cublas_dir: str) -> None:
     """Run NCU profiling and save results in the NCU directory."""
-    profile_name = f"profile_m{matrix_size}_n{num_matrices}_t{num_threads}"
-    profile_path = os.path.join(ncu_dir, profile_name)
+    profile_name = f"profile_m{matrix_size}_n{num_matrices}"
+    profile_path = os.path.join(cublas_dir, profile_name)
     
     ncu_command = [
         "CUDA_VISIBLE_DEVICES=2",
@@ -110,17 +110,17 @@ def run_ncu_profile(matrix_size: int, num_matrices: int, num_threads: int, ncu_d
         "--kernel-name-base", "mangled",  # Use mangled kernel names
         "-f",
         "-o", profile_path,
-        "./custom"
+        "./benchmark"
     ]
     subprocess.run(" ".join(ncu_command), shell=True, check=True)
 
-def run_benchmark(matrix_size: int, num_matrices: int, num_threads: int) -> List[float]:
+def run_benchmark(matrix_size: int, num_matrices: int, num_runs: int) -> List[float]:
     """Run benchmark 10 times and collect runtimes."""
     runtimes = []
     incorrect_inversions = 0
-    for _ in range(10):
+    for _ in range(num_runs):
         result = subprocess.run(
-            "./custom",
+            "./benchmark",
             capture_output=True,
             text=True,
             check=True
@@ -136,16 +136,19 @@ def run_benchmark(matrix_size: int, num_matrices: int, num_threads: int) -> List
                 break
 
         for line in result.stderr.split("\n"):
-            if "Incorrect inversions" in line:
+            if "Incorrectly inverted matrices" in line:
                 incorrect_inversions = int(line.split(":")[-1].strip())
-                print(f"Incorrect inversions: {incorrect_inversions}")
+                print(f"Incorrectly inverted matrices: {incorrect_inversions}")
                 break
         # Extract runtime from output (assuming it's printed directly)
         # runtime = float(result.stdout.strip())
         # runtimes.append(runtime)
         time.sleep(1)  # Small delay between runs
     runtime_avg = sum(runtimes) / len(runtimes)
-    return runtimes, runtime_avg, incorrect_inversions
+    # calculate standard deviation and variance using numpy
+    variance = np.var(runtimes)
+    std_dev = np.std(runtimes)
+    return runtimes, runtime_avg, variance, std_dev, incorrect_inversions
 
 def save_results(results: dict, filepath: str) -> None:
     """Save benchmark results to a JSON file."""
@@ -154,18 +157,18 @@ def save_results(results: dict, filepath: str) -> None:
 
 def main():
     # Parameter ranges
-    # matrix_sizes = range(1, 33)
-    matrix_sizes = [8, 16, 32]
+    matrix_sizes = range(1, 33)
+    # matrix_sizes = [8, 16, 32]
     # num_matrices_list = [1000, 10000, 100000, 500000, 1000000]
-    num_matrices_list = [100, 1000]
-    num_threads_list = [32, 64]#, 128, 256]
+    num_matrices_list = [1000]
+    num_runs = 10
     
     # Load required modules
     load_modules()
     
     # Create timestamp and directories
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    base_dir, ncu_dir, runtime_dir = create_output_directories(timestamp)
+    base_dir, cublas_dir, runtime_dir = create_output_directories(timestamp)
     
     # Store all results
     results = {}
@@ -173,42 +176,42 @@ def main():
     try:
         for matrix_size in matrix_sizes:
             for num_matrices in num_matrices_list:
-                for num_threads in num_threads_list:
                     print(f"\nTesting configuration: Matrix Size={matrix_size}, "
-                          f"Num Matrices={num_matrices}, Num Threads={num_threads}")
+                          f"Num Matrices={num_matrices}")
                     
                     # Compile with current parameters
-                    compile_cuda(matrix_size, num_matrices, num_threads)
+                    compile_cublas(matrix_size, num_matrices)
                     
                     # Run NCU profiling
-                    run_ncu_profile(matrix_size, num_matrices, num_threads, ncu_dir)
+                    run_ncu_profile(matrix_size, num_matrices, cublas_dir)
                     
                     # Run benchmarks
-                    runtimes, runtime_avg, incorrect_inversions = run_benchmark(matrix_size, num_matrices, num_threads)
+                    runtimes, runtime_avg, variance, std_dev, incorrect_inversions = run_benchmark(matrix_size, num_matrices, num_runs)
                     
                     # Store results
-                    key = f"m{matrix_size}_n{num_matrices}_t{num_threads}"
+                    key = f"m{matrix_size}_n{num_matrices}"
                     results[key] = {
                         "matrix_size": matrix_size,
                         "num_matrices": num_matrices,
-                        "num_threads": num_threads,
                         "runtimes": runtimes,
                         "runtime_avg": runtime_avg,
+                        "variance": variance,
+                        "std_dev": std_dev,
                         "incorrect_inversions": incorrect_inversions
                     }
                     
                     # Save intermediate results
-                    runtime_file = os.path.join(runtime_dir, "benchmark_results.json")
+                    runtime_file = os.path.join(runtime_dir, "cublas_results.json")
                     save_results(results, runtime_file)
                     
     except subprocess.CalledProcessError as e:
         print(f"Error during execution: {e}")
         # Save results even if there's an error
-        error_file = os.path.join(runtime_dir, "benchmark_results_incomplete.json")
+        error_file = os.path.join(runtime_dir, "cublas_results_incomplete.json")
         save_results(results, error_file)
     except Exception as e:
         print(f"Unexpected error: {e}")
-        error_file = os.path.join(runtime_dir, "benchmark_results_incomplete.json")
+        error_file = os.path.join(runtime_dir, "cublas_results_incomplete.json")
         save_results(results, error_file)
 
 if __name__ == "__main__":

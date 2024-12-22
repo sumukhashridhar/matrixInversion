@@ -6,6 +6,7 @@ int main() {
     constexpr int numThreads=NUMTHREADS;
 
     const int threadsPerMatrix = matrixSize;
+    // const int threadsPerMatrix = 32;
     const int matricesPerBlock = numThreads / threadsPerMatrix;
     const int numBlocks = numMatrices / matricesPerBlock;
 

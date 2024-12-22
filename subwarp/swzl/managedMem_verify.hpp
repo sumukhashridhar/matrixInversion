@@ -9,7 +9,7 @@
 
 using FpType = float;
 
-void printMatrices(const std::vector<FpType> A_inv, int matrixSize, int numMatrices)
+void printMatrices(FpType *A_inv, int matrixSize, int numMatrices)
 {
     for (int k = 0; k < numMatrices; ++k)
     {
@@ -26,14 +26,16 @@ void printMatrices(const std::vector<FpType> A_inv, int matrixSize, int numMatri
     }
 }
 
-
-void writeToFile(const std::vector<FpType> A_inv, const std::string &filename, int matrixSize, int numMatrices)
+void writeToFile(FpType *A_inv, const std::string &filename, int matrixSize, int numMatrices)
 {
     std::ofstream file(filename);
-    for (int k = 0; k < numMatrices; ++k) {
+    for (int k = 0; k < numMatrices; ++k)
+    {
         int offset = k * matrixSize * matrixSize;
-        for (int i = 0; i < matrixSize; ++i) {
-            for (int j = 0; j < matrixSize; ++j) {
+        for (int i = 0; i < matrixSize; ++i)
+        {
+            for (int j = 0; j < matrixSize; ++j)
+            {
                 file << A_inv[(i * matrixSize) + offset + j] << " ";
             }
             file << '\n';
@@ -43,7 +45,8 @@ void writeToFile(const std::vector<FpType> A_inv, const std::string &filename, i
     file.close();
 }
 
-void verifyInv(const std::vector<FpType> A, const std::vector<FpType> A_inv, int matrixSize, int numMatrices)
+// void verifyInv(const std::vector<FpType> A, const std::vector<FpType> A_inv, int matrixSize, int numMatrices)
+void verifyInv(FpType *A, FpType *A_inv, int matrixSize, int numMatrices)
 {
     FpType result = static_cast<FpType>(0.0);
     int corrInv = 0, wrngInv = 0, offset = 0, idCnt = 0, offDiagCnt = 0;
@@ -64,7 +67,6 @@ void verifyInv(const std::vector<FpType> A, const std::vector<FpType> A_inv, int
                 {
                     result += A[(j * matrixSize) + offset + l] * A_inv[(l * matrixSize) + offset + i];
                 }
-
 
                 if (i == j && std::fabs(result - FpType(1.0)) < 1e-3)
                 {
@@ -96,8 +98,7 @@ void verifyInv(const std::vector<FpType> A, const std::vector<FpType> A_inv, int
     std::cout << "Incorrect inversions: " << wrngInv << '\n';
 }
 
-
-void verifyLU(const std::vector<FpType> A, std::vector<FpType> LU, int matrixSize, int numMatrices)
+void verifyLU(FpType *A, FpType *LU, int matrixSize, int numMatrices)
 {
     // store L and U matrices separately from LU
     std::vector<FpType> L(matrixSize * matrixSize * numMatrices, 0.0);
@@ -154,10 +155,10 @@ void verifyLU(const std::vector<FpType> A, std::vector<FpType> LU, int matrixSiz
 #pragma omp simd reduction(+ : result)
                 for (int l = 0; l < matrixSize; ++l)
                 {
-                        result += L[(i * matrixSize) + offset + l] * U[(l * matrixSize) + offset + j];
+                    result += L[(i * matrixSize) + offset + l] * U[(l * matrixSize) + offset + j];
                 }
                 LU[(i * matrixSize) + offset + j] = result;
-                
+
                 if (std::fabs(A[(i * matrixSize) + offset + j] - result) < 1e-3)
                 {
                     idCnt++;

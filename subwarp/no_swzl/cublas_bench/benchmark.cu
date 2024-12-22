@@ -1,6 +1,7 @@
 #include <cuda_runtime.h>
 #include <cublas_v2.h>
 #include <iostream>
+#include <fstream>
 #include <vector>
 #include <random>
 
@@ -9,16 +10,15 @@ using FpType = float;
 #define CUDA_CHECK(call) { cudaError_t err = call; if (err != cudaSuccess) { printf("CUDA error: %s, line %d\n", cudaGetErrorString(err), __LINE__); exit(1); } }
 #define CUBLAS_CHECK(call) { cublasStatus_t status = call; if (status != CUBLAS_STATUS_SUCCESS) { printf("cuBLAS error: %d, line %d\n", status, __LINE__); exit(1); } }
 
-// const int BATCH_SIZE = 1000000;
-// const int N = 8; // 8x8 matrices
-
 // Helper function to initialize a matrix with random values
 void initializeMatrix(FpType* matrix, int n) {
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_real_distribution<> dis(static_cast<FpType>(-1.0), static_cast<FpType>(1.0));
+    std::ifstream file("matrix.txt");
     for (int i = 0; i < n * n; ++i) {
-        matrix[i] = static_cast<FpType>(dis(gen));
+        file >> matrix[i];
+        // matrix[i] = static_cast<FpType>(dis(gen));
     }
 }
 
@@ -26,21 +26,28 @@ int main() {
     cublasHandle_t handle;
     CUBLAS_CHECK(cublasCreate(&handle));
 
-    int BATCH_SIZE, N;
-
-    std::cout << "Enter batch size: ";
-    std::cin >> BATCH_SIZE;
-    std::cout << "Enter matrix size: ";
-    std::cin >> N;
+    constexpr int BATCH_SIZE=INP_BATCH_SIZE;
+    constexpr int N=INP_MATRIX_SIZE;
 
     // Host memory
     std::vector<FpType*> h_A(BATCH_SIZE);
     std::vector<FpType*> h_invA(BATCH_SIZE);
+
+    std::cout << "Batch size: " << BATCH_SIZE << '\n';
+    std::cout << "Matrix size: " << N << '\n';
+
+    std::cout << "Initializing matrices..." << std::endl;
     for (int i = 0; i < BATCH_SIZE; ++i) {
         h_A[i] = new FpType[N * N];
         h_invA[i] = new FpType[N * N];
         initializeMatrix(h_A[i], N);
+        // init input matrix as 0.0
+        for (int j = 0; j < N * N; ++j) {
+            h_invA[i][j] = static_cast<FpType>(0.0);
+        }
     }
+
+    std::cout << "Matrices initialized." << std::endl;
 
     // Device memory
     FpType **d_A_array, **d_invA_array;
@@ -56,10 +63,13 @@ int main() {
         CUDA_CHECK(cudaMalloc(&d_A[i], N * N * sizeof(FpType)));
         CUDA_CHECK(cudaMalloc(&d_invA[i], N * N * sizeof(FpType)));
         CUDA_CHECK(cudaMemcpy(d_A[i], h_A[i], N * N * sizeof(FpType), cudaMemcpyHostToDevice));
+        CUDA_CHECK(cudaMemcpy(d_invA[i], h_invA[i], N * N * sizeof(FpType), cudaMemcpyHostToDevice));
     }
 
     CUDA_CHECK(cudaMemcpy(d_A_array, d_A.data(), BATCH_SIZE * sizeof(FpType*), cudaMemcpyHostToDevice));
     CUDA_CHECK(cudaMemcpy(d_invA_array, d_invA.data(), BATCH_SIZE * sizeof(FpType*), cudaMemcpyHostToDevice));
+
+    std::cout << "Matrices copied to device." << std::endl;
 
     cudaEvent_t start, stop;
     cudaEventCreate(&start);
@@ -81,19 +91,67 @@ int main() {
     cudaEventElapsedTime(&milliseconds, start, stop);
     std::cout << "cuBLAS Kernel execution time: " << milliseconds << " milliseconds\n";
 
-    // Copy results back to host (just the first matrix for demonstration)
-    CUDA_CHECK(cudaMemcpy(h_invA[0], d_invA[0], N * N * sizeof(FpType), cudaMemcpyDeviceToHost));
-
-    // Print the first inverted matrix
-    std::cout << "First inverted matrix:" << std::endl;
-    for (int i = 0; i < N; ++i) {
-        for (int j = 0; j < N; ++j) {
-            std::cout << h_invA[0][i * N + j] << " ";
-        }
-        std::cout << std::endl;
+    // Copy results back to host i.e all the matrices
+    for (int i = 0; i < BATCH_SIZE; ++i) {
+        CUDA_CHECK(cudaMemcpy(h_invA[i], d_invA[i], N * N * sizeof(FpType), cudaMemcpyDeviceToHost));
     }
 
+    std::cout << "Data copied back to host." << std::endl;
+
+    std::cout << "Verifying inversion..." << std::endl;
+
+    int diagCnt = 0, offDiagCnt = 0;
+    int corrInv = 0, wrongInv = 0;
+
+    FpType *A = new FpType[N * N];
+    FpType *A_inv = new FpType[N * N];
+
+    for (int i = 0; i < BATCH_SIZE; ++i) {
+        FpType *A = h_A[i];
+        FpType *invA = h_invA[i];
+        FpType *result = new FpType[N * N];
+
+        diagCnt = 0;
+        offDiagCnt = 0;
+
+        for (int j = 0; j < N; ++j) {
+            for (int k = 0; k < N; ++k) {
+                FpType sum = 0.0;
+                for (int l = 0; l < N; ++l) {
+                    sum += A[j * N + l] * invA[l * N + k];
+                }
+                result[j * N + k] = sum;
+            }
+        }
+
+        // verify if the result is the identity matrix
+        for (int j = 0; j < N; ++j) {
+            for (int k = 0; k < N; ++k) {
+                if (j == k && std::abs(result[j * N + k] - FpType(1.0)) < 1e-3) {
+                    diagCnt++;
+                } else if (j != k && std::abs(result[j * N + k] - FpType(0.0)) < 1e-3) {
+                    offDiagCnt++;
+                }
+            }
+        }
+        
+        if (diagCnt == N && offDiagCnt == N * (N - 1)) {
+            corrInv++;
+        } else {
+            wrongInv++;
+        }
+
+        delete[] result;
+    }
+
+    std::cout << "Correctly inverted matrices: " << corrInv << std::endl;
+    std::cout << "Incorrectly inverted matrices: " << wrongInv << std::endl;
+
     // Clean up
+
+    delete[] A;
+    delete[] A_inv;
+
     CUBLAS_CHECK(cublasDestroy(handle));
 
     for (int i = 0; i < BATCH_SIZE; ++i) {
