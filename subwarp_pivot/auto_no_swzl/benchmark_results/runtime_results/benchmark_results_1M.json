@@ -1,0 +1,110 @@
+{
+    "m1_n1000000_t32": {
+        "matrix_size": 1,
+        "num_matrices": 1000000,
+        "num_threads": 32,
+        "runtimes": [
+            0.033248
+        ],
+        "runtime_avg": 0.033248,
+        "variance": 0.0,
+        "std_dev": 0.0,
+        "incorrect_inversions": 0
+    },
+    "m2_n1000000_t32": {
+        "matrix_size": 2,
+        "num_matrices": 1000000,
+        "num_threads": 32,
+        "runtimes": [
+            0.078176
+        ],
+        "runtime_avg": 0.078176,
+        "variance": 0.0,
+        "std_dev": 0.0,
+        "incorrect_inversions": 0
+    },
+    "m3_n1000000_t30": {
+        "matrix_size": 3,
+        "num_matrices": 1000000,
+        "num_threads": 30,
+        "runtimes": [
+            0.197504
+        ],
+        "runtime_avg": 0.197504,
+        "variance": 0.0,
+        "std_dev": 0.0,
+        "incorrect_inversions": 0
+    },
+    "m4_n1000000_t32": {
+        "matrix_size": 4,
+        "num_matrices": 1000000,
+        "num_threads": 32,
+        "runtimes": [
+            0.368608
+        ],
+        "runtime_avg": 0.368608,
+        "variance": 0.0,
+        "std_dev": 0.0,
+        "incorrect_inversions": 0
+    },
+    "m5_n1000000_t30": {
+        "matrix_size": 5,
+        "num_matrices": 1000000,
+        "num_threads": 30,
+        "runtimes": [
+            0.591648
+        ],
+        "runtime_avg": 0.591648,
+        "variance": 0.0,
+        "std_dev": 0.0,
+        "incorrect_inversions": 0
+    },
+    "m6_n1000000_t30": {
+        "matrix_size": 6,
+        "num_matrices": 1000000,
+        "num_threads": 30,
+        "runtimes": [
+            0.65616
+        ],
+        "runtime_avg": 0.65616,
+        "variance": 0.0,
+        "std_dev": 0.0,
+        "incorrect_inversions": 0
+    },
+    "m7_n1000000_t28": {
+        "matrix_size": 7,
+        "num_matrices": 1000000,
+        "num_threads": 28,
+        "runtimes": [
+            1.12874
+        ],
+        "runtime_avg": 1.12874,
+        "variance": 0.0,
+        "std_dev": 0.0,
+        "incorrect_inversions": 0
+    },
+    "m8_n1000000_t32": {
+        "matrix_size": 8,
+        "num_matrices": 1000000,
+        "num_threads": 32,
+        "runtimes": [
+            1.95984
+        ],
+        "runtime_avg": 1.95984,
+        "variance": 0.0,
+        "std_dev": 0.0,
+        "incorrect_inversions": 0
+    },
+    "m9_n1000000_t27": {
+        "matrix_size": 9,
+        "num_matrices": 1000000,
+        "num_threads": 27,
+        "runtimes": [
+            2.28422
+        ],
+        "runtime_avg": 2.28422,
+        "variance": 0.0,
+        "std_dev": 0.0,
+        "incorrect_inversions": 0
+    }
+}

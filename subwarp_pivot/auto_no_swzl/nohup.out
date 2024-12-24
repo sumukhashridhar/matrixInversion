@@ -1,0 +1,870 @@
+==PROF== Received signal
+==PROF== Trying to shutdown target application
+==ERROR== The application returned an error code (9).
+==WARNING== No kernels were profiled.
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function '_Z18batched_lu_subwarpIfLi1ELi1ELi32ELi1000000EEvPT_' for 'sm_86'
+ptxas info    : Function properties for _Z18batched_lu_subwarpIfLi1ELi1ELi32ELi1000000EEvPT_
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 10 registers, 360 bytes cmem[0]
+==PROF== Connected to process 3438034 (/nfs/c3po/home/ge47gem/final/matrixInversion/subwarp/no_swzl/custom)
+==PROF== Profiling "batched_lu_subwarp" - 1: 0%....50%....100% - 35 passes
+Matrix size: 1
+Number of matrices: 1000000
+Number of threads per block: 32
+Threads per matrix: 1
+Matrices per block: 32
+Number of blocks: 31250
+Reading data from file.
+Data read from file.
+Data copied to device.
+Kernel execution time: 2373.49 milliseconds
+Data copied back to host.
+Correct inversions: 1000000
+Incorrect inversions: 0
+Time taken to verify inverse: 0.0124237 seconds
+==PROF== Disconnected from process 3438034
+==PROF== Report: /nfs/c3po/home/ge47gem/final/matrixInversion/subwarp/no_swzl/benchmark_results/ncu_profiles/profile_m1_n1000000_t32.ncu-rep
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function '_Z18batched_lu_subwarpIfLi2ELi2ELi16ELi1000000EEvPT_' for 'sm_86'
+ptxas info    : Function properties for _Z18batched_lu_subwarpIfLi2ELi2ELi16ELi1000000EEvPT_
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 18 registers, 360 bytes cmem[0]
+==PROF== Connected to process 3438124 (/nfs/c3po/home/ge47gem/final/matrixInversion/subwarp/no_swzl/custom)
+==PROF== Profiling "batched_lu_subwarp" - 1: 0%....50%....100% - 35 passes
+Matrix size: 2
+Number of matrices: 1000000
+Number of threads per block: 32
+Threads per matrix: 2
+Matrices per block: 16
+Number of blocks: 62500
+Reading data from file.
+Data read from file.
+Data copied to device.
+Kernel execution time: 2475.46 milliseconds
+Data copied back to host.
+Correct inversions: 1000000
+Incorrect inversions: 0
+Time taken to verify inverse: 0.0746006 seconds
+==PROF== Disconnected from process 3438124
+==PROF== Report: /nfs/c3po/home/ge47gem/final/matrixInversion/subwarp/no_swzl/benchmark_results/ncu_profiles/profile_m2_n1000000_t32.ncu-rep
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function '_Z18batched_lu_subwarpIfLi3ELi3ELi10ELi1000000EEvPT_' for 'sm_86'
+ptxas info    : Function properties for _Z18batched_lu_subwarpIfLi3ELi3ELi10ELi1000000EEvPT_
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 22 registers, 360 bytes cmem[0]
+==PROF== Connected to process 3438206 (/nfs/c3po/home/ge47gem/final/matrixInversion/subwarp/no_swzl/custom)
+==PROF== Profiling "batched_lu_subwarp" - 1: 0%....50%....100% - 35 passes
+Matrix size: 3
+Number of matrices: 1000000
+Number of threads per block: 30
+Threads per matrix: 3
+Matrices per block: 10
+Number of blocks: 100000
+Reading data from file.
+Data read from file.
+Data copied to device.
+Kernel execution time: 2588.18 milliseconds
+Data copied back to host.
+Correct inversions: 1000000
+Incorrect inversions: 0
+Time taken to verify inverse: 0.146004 seconds
+==PROF== Disconnected from process 3438206
+==PROF== Report: /nfs/c3po/home/ge47gem/final/matrixInversion/subwarp/no_swzl/benchmark_results/ncu_profiles/profile_m3_n1000000_t30.ncu-rep
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function '_Z18batched_lu_subwarpIfLi4ELi4ELi8ELi1000000EEvPT_' for 'sm_86'
+ptxas info    : Function properties for _Z18batched_lu_subwarpIfLi4ELi4ELi8ELi1000000EEvPT_
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 22 registers, 360 bytes cmem[0]
+==PROF== Connected to process 3438287 (/nfs/c3po/home/ge47gem/final/matrixInversion/subwarp/no_swzl/custom)
+==PROF== Profiling "batched_lu_subwarp" - 1: 0%....50%....100% - 35 passes
+Matrix size: 4
+Number of matrices: 1000000
+Number of threads per block: 32
+Threads per matrix: 4
+Matrices per block: 8
+Number of blocks: 125000
+Reading data from file.
+Data read from file.
+Data copied to device.
+Kernel execution time: 2602.39 milliseconds
+Data copied back to host.
+Correct inversions: 1000000
+Incorrect inversions: 0
+Time taken to verify inverse: 0.246874 seconds
+==PROF== Disconnected from process 3438287
+==PROF== Report: /nfs/c3po/home/ge47gem/final/matrixInversion/subwarp/no_swzl/benchmark_results/ncu_profiles/profile_m4_n1000000_t32.ncu-rep
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function '_Z18batched_lu_subwarpIfLi5ELi5ELi6ELi1000000EEvPT_' for 'sm_86'
+ptxas info    : Function properties for _Z18batched_lu_subwarpIfLi5ELi5ELi6ELi1000000EEvPT_
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 24 registers, 360 bytes cmem[0]
+==PROF== Connected to process 3438369 (/nfs/c3po/home/ge47gem/final/matrixInversion/subwarp/no_swzl/custom)
+==PROF== Profiling "batched_lu_subwarp" - 1: 0%....50%....100% - 35 passes
+Matrix size: 5
+Number of matrices: 1000000
+Number of threads per block: 30
+Threads per matrix: 5
+Matrices per block: 6
+Number of blocks: 166666
+Reading data from file.
+Data read from file.
+Data copied to device.
+Kernel execution time: 2399.16 milliseconds
+Data copied back to host.
+Correct inversions: 999996
+Incorrect inversions: 4
+Time taken to verify inverse: 0.290036 seconds
+==PROF== Disconnected from process 3438369
+==PROF== Report: /nfs/c3po/home/ge47gem/final/matrixInversion/subwarp/no_swzl/benchmark_results/ncu_profiles/profile_m5_n1000000_t30.ncu-rep
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function '_Z18batched_lu_subwarpIfLi6ELi6ELi5ELi1000000EEvPT_' for 'sm_86'
+ptxas info    : Function properties for _Z18batched_lu_subwarpIfLi6ELi6ELi5ELi1000000EEvPT_
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 28 registers, 360 bytes cmem[0]
+==PROF== Connected to process 3438451 (/nfs/c3po/home/ge47gem/final/matrixInversion/subwarp/no_swzl/custom)
+==PROF== Profiling "batched_lu_subwarp" - 1: 0%....50%....100% - 35 passes
+Matrix size: 6
+Number of matrices: 1000000
+Number of threads per block: 30
+Threads per matrix: 6
+Matrices per block: 5
+Number of blocks: 200000
+Reading data from file.
+Data read from file.
+Data copied to device.
+Kernel execution time: 2683.3 milliseconds
+Data copied back to host.
+Correct inversions: 1000000
+Incorrect inversions: 0
+Time taken to verify inverse: 0.455881 seconds
+==PROF== Disconnected from process 3438451
+==PROF== Report: /nfs/c3po/home/ge47gem/final/matrixInversion/subwarp/no_swzl/benchmark_results/ncu_profiles/profile_m6_n1000000_t30.ncu-rep
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function '_Z18batched_lu_subwarpIfLi7ELi7ELi4ELi1000000EEvPT_' for 'sm_86'
+ptxas info    : Function properties for _Z18batched_lu_subwarpIfLi7ELi7ELi4ELi1000000EEvPT_
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 34 registers, 360 bytes cmem[0]
+==PROF== Connected to process 3438534 (/nfs/c3po/home/ge47gem/final/matrixInversion/subwarp/no_swzl/custom)
+==PROF== Profiling "batched_lu_subwarp" - 1: 0%....50%....100% - 35 passes
+Matrix size: 7
+Number of matrices: 1000000
+Number of threads per block: 28
+Threads per matrix: 7
+Matrices per block: 4
+Number of blocks: 250000
+Reading data from file.
+Data read from file.
+Data copied to device.
+Kernel execution time: 3146.26 milliseconds
+Data copied back to host.
+Correct inversions: 1000000
+Incorrect inversions: 0
+Time taken to verify inverse: 0.807211 seconds
+==PROF== Disconnected from process 3438534
+==PROF== Report: /nfs/c3po/home/ge47gem/final/matrixInversion/subwarp/no_swzl/benchmark_results/ncu_profiles/profile_m7_n1000000_t28.ncu-rep
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function '_Z18batched_lu_subwarpIfLi8ELi8ELi4ELi1000000EEvPT_' for 'sm_86'
+ptxas info    : Function properties for _Z18batched_lu_subwarpIfLi8ELi8ELi4ELi1000000EEvPT_
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 42 registers, 360 bytes cmem[0]
+==PROF== Connected to process 3438618 (/nfs/c3po/home/ge47gem/final/matrixInversion/subwarp/no_swzl/custom)
+==PROF== Profiling "batched_lu_subwarp" - 1: 0%....50%....100% - 35 passes
+Matrix size: 8
+Number of matrices: 1000000
+Number of threads per block: 32
+Threads per matrix: 8
+Matrices per block: 4
+Number of blocks: 250000
+Reading data from file.
+Data read from file.
+Data copied to device.
+Kernel execution time: 3052.68 milliseconds
+Data copied back to host.
+Correct inversions: 1000000
+Incorrect inversions: 0
+Time taken to verify inverse: 0.684078 seconds
+==PROF== Disconnected from process 3438618
+==PROF== Report: /nfs/c3po/home/ge47gem/final/matrixInversion/subwarp/no_swzl/benchmark_results/ncu_profiles/profile_m8_n1000000_t32.ncu-rep
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function '_Z18batched_lu_subwarpIfLi9ELi9ELi3ELi1000000EEvPT_' for 'sm_86'
+ptxas info    : Function properties for _Z18batched_lu_subwarpIfLi9ELi9ELi3ELi1000000EEvPT_
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 44 registers, 360 bytes cmem[0]
+==PROF== Connected to process 3438703 (/nfs/c3po/home/ge47gem/final/matrixInversion/subwarp/no_swzl/custom)
+==PROF== Profiling "batched_lu_subwarp" - 1: 0%....50%....100% - 35 passes
+Matrix size: 9
+Number of matrices: 1000000
+Number of threads per block: 27
+Threads per matrix: 9
+Matrices per block: 3
+Number of blocks: 333333
+Reading data from file.
+Data read from file.
+Data copied to device.
+Kernel execution time: 2919.01 milliseconds
+Data copied back to host.
+Correct inversions: 999999
+Incorrect inversions: 1
+Time taken to verify inverse: 1.11744 seconds
+==PROF== Disconnected from process 3438703
+==PROF== Report: /nfs/c3po/home/ge47gem/final/matrixInversion/subwarp/no_swzl/benchmark_results/ncu_profiles/profile_m9_n1000000_t27.ncu-rep
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function '_Z18batched_lu_subwarpIfLi10ELi10ELi3ELi1000000EEvPT_' for 'sm_86'
+ptxas info    : Function properties for _Z18batched_lu_subwarpIfLi10ELi10ELi3ELi1000000EEvPT_
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 52 registers, 360 bytes cmem[0]
+==PROF== Connected to process 3438805 (/nfs/c3po/home/ge47gem/final/matrixInversion/subwarp/no_swzl/custom)
+==PROF== Profiling "batched_lu_subwarp" - 1: 0%....50%....100% - 35 passes
+Matrix size: 10
+Number of matrices: 1000000
+Number of threads per block: 30
+Threads per matrix: 10
+Matrices per block: 3
+Number of blocks: 333333
+Reading data from file.
+Data read from file.
+Data copied to device.
+Kernel execution time: 3331.9 milliseconds
+Data copied back to host.
+Correct inversions: 999999
+Incorrect inversions: 1
+Time taken to verify inverse: 1.3853 seconds
+==PROF== Disconnected from process 3438805
+==PROF== Report: /nfs/c3po/home/ge47gem/final/matrixInversion/subwarp/no_swzl/benchmark_results/ncu_profiles/profile_m10_n1000000_t30.ncu-rep
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function '_Z18batched_lu_subwarpIfLi11ELi11ELi2ELi1000000EEvPT_' for 'sm_86'
+ptxas info    : Function properties for _Z18batched_lu_subwarpIfLi11ELi11ELi2ELi1000000EEvPT_
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 49 registers, 360 bytes cmem[0]
+==PROF== Connected to process 3438896 (/nfs/c3po/home/ge47gem/final/matrixInversion/subwarp/no_swzl/custom)
+==PROF== Profiling "batched_lu_subwarp" - 1: 0%....50%....100% - 35 passes
+Matrix size: 11
+Number of matrices: 1000000
+Number of threads per block: 22
+Threads per matrix: 11
+Matrices per block: 2
+Number of blocks: 500000
+Reading data from file.
+Data read from file.
+Data copied to device.
+Kernel execution time: 3651.2 milliseconds
+Data copied back to host.
+Correct inversions: 1000000
+Incorrect inversions: 0
+Time taken to verify inverse: 2.08294 seconds
+==PROF== Disconnected from process 3438896
+==PROF== Report: /nfs/c3po/home/ge47gem/final/matrixInversion/subwarp/no_swzl/benchmark_results/ncu_profiles/profile_m11_n1000000_t22.ncu-rep
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function '_Z18batched_lu_subwarpIfLi12ELi12ELi2ELi1000000EEvPT_' for 'sm_86'
+ptxas info    : Function properties for _Z18batched_lu_subwarpIfLi12ELi12ELi2ELi1000000EEvPT_
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 57 registers, 360 bytes cmem[0]
+==PROF== Connected to process 3438981 (/nfs/c3po/home/ge47gem/final/matrixInversion/subwarp/no_swzl/custom)
+==PROF== Profiling "batched_lu_subwarp" - 1: 0%....50%....100% - 35 passes
+Matrix size: 12
+Number of matrices: 1000000
+Number of threads per block: 24
+Threads per matrix: 12
+Matrices per block: 2
+Number of blocks: 500000
+Reading data from file.
+Data read from file.
+Data copied to device.
+Kernel execution time: 3547.28 milliseconds
+Data copied back to host.
+Correct inversions: 1000000
+Incorrect inversions: 0
+Time taken to verify inverse: 2.42747 seconds
+==PROF== Disconnected from process 3438981
+==PROF== Report: /nfs/c3po/home/ge47gem/final/matrixInversion/subwarp/no_swzl/benchmark_results/ncu_profiles/profile_m12_n1000000_t24.ncu-rep
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function '_Z18batched_lu_subwarpIfLi13ELi13ELi2ELi1000000EEvPT_' for 'sm_86'
+ptxas info    : Function properties for _Z18batched_lu_subwarpIfLi13ELi13ELi2ELi1000000EEvPT_
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 52 registers, 360 bytes cmem[0]
+==PROF== Connected to process 3439071 (/nfs/c3po/home/ge47gem/final/matrixInversion/subwarp/no_swzl/custom)
+==PROF== Profiling "batched_lu_subwarp" - 1: 0%....50%....100% - 35 passes
+Matrix size: 13
+Number of matrices: 1000000
+Number of threads per block: 26
+Threads per matrix: 13
+Matrices per block: 2
+Number of blocks: 500000
+Reading data from file.
+Data read from file.
+Data copied to device.
+Kernel execution time: 4539.25 milliseconds
+Data copied back to host.
+Correct inversions: 1000000
+Incorrect inversions: 0
+Time taken to verify inverse: 2.01204 seconds
+==PROF== Disconnected from process 3439071
+==PROF== Report: /nfs/c3po/home/ge47gem/final/matrixInversion/subwarp/no_swzl/benchmark_results/ncu_profiles/profile_m13_n1000000_t26.ncu-rep
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function '_Z18batched_lu_subwarpIfLi14ELi14ELi2ELi1000000EEvPT_' for 'sm_86'
+ptxas info    : Function properties for _Z18batched_lu_subwarpIfLi14ELi14ELi2ELi1000000EEvPT_
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 65 registers, 360 bytes cmem[0]
+==PROF== Connected to process 3439158 (/nfs/c3po/home/ge47gem/final/matrixInversion/subwarp/no_swzl/custom)
+==PROF== Profiling "batched_lu_subwarp" - 1: 0%....50%....100% - 35 passes
+Matrix size: 14
+Number of matrices: 1000000
+Number of threads per block: 28
+Threads per matrix: 14
+Matrices per block: 2
+Number of blocks: 500000
+Reading data from file.
+Data read from file.
+Data copied to device.
+Kernel execution time: 4028.15 milliseconds
+Data copied back to host.
+Correct inversions: 1000000
+Incorrect inversions: 0
+Time taken to verify inverse: 3.54455 seconds
+==PROF== Disconnected from process 3439158
+==PROF== Report: /nfs/c3po/home/ge47gem/final/matrixInversion/subwarp/no_swzl/benchmark_results/ncu_profiles/profile_m14_n1000000_t28.ncu-rep
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function '_Z18batched_lu_subwarpIfLi15ELi15ELi2ELi1000000EEvPT_' for 'sm_86'
+ptxas info    : Function properties for _Z18batched_lu_subwarpIfLi15ELi15ELi2ELi1000000EEvPT_
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 52 registers, 360 bytes cmem[0]
+==PROF== Connected to process 3439251 (/nfs/c3po/home/ge47gem/final/matrixInversion/subwarp/no_swzl/custom)
+==PROF== Profiling "batched_lu_subwarp" - 1: 0%....50%....100% - 35 passes
+Matrix size: 15
+Number of matrices: 1000000
+Number of threads per block: 30
+Threads per matrix: 15
+Matrices per block: 2
+Number of blocks: 500000
+Reading data from file.
+Data read from file.
+Data copied to device.
+Kernel execution time: 4699.96 milliseconds
+Data copied back to host.
+Correct inversions: 1000000
+Incorrect inversions: 0
+Time taken to verify inverse: 4.73255 seconds
+==PROF== Disconnected from process 3439251
+==PROF== Report: /nfs/c3po/home/ge47gem/final/matrixInversion/subwarp/no_swzl/benchmark_results/ncu_profiles/profile_m15_n1000000_t30.ncu-rep
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function '_Z18batched_lu_subwarpIfLi16ELi16ELi2ELi1000000EEvPT_' for 'sm_86'
+ptxas info    : Function properties for _Z18batched_lu_subwarpIfLi16ELi16ELi2ELi1000000EEvPT_
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 68 registers, 360 bytes cmem[0]
+==PROF== Connected to process 3439339 (/nfs/c3po/home/ge47gem/final/matrixInversion/subwarp/no_swzl/custom)
+==PROF== Profiling "batched_lu_subwarp" - 1: 0%....50%....100% - 35 passes
+Matrix size: 16
+Number of matrices: 1000000
+Number of threads per block: 32
+Threads per matrix: 16
+Matrices per block: 2
+Number of blocks: 500000
+Reading data from file.
+Data read from file.
+Data copied to device.
+Kernel execution time: 4128.02 milliseconds
+Data copied back to host.
+Correct inversions: 1000000
+Incorrect inversions: 0
+Time taken to verify inverse: 3.26931 seconds
+==PROF== Disconnected from process 3439339
+==PROF== Report: /nfs/c3po/home/ge47gem/final/matrixInversion/subwarp/no_swzl/benchmark_results/ncu_profiles/profile_m16_n1000000_t32.ncu-rep
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function '_Z18batched_lu_subwarpIfLi17ELi17ELi1ELi1000000EEvPT_' for 'sm_86'
+ptxas info    : Function properties for _Z18batched_lu_subwarpIfLi17ELi17ELi1ELi1000000EEvPT_
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 53 registers, 360 bytes cmem[0]
+==PROF== Connected to process 3439425 (/nfs/c3po/home/ge47gem/final/matrixInversion/subwarp/no_swzl/custom)
+==PROF== Profiling "batched_lu_subwarp" - 1: 0%....50%....100% - 35 passes
+Matrix size: 17
+Number of matrices: 1000000
+Number of threads per block: 17
+Threads per matrix: 17
+Matrices per block: 1
+Number of blocks: 1000000
+Reading data from file.
+Data read from file.
+Data copied to device.
+Kernel execution time: 6565.22 milliseconds
+Data copied back to host.
+Correct inversions: 1000000
+Incorrect inversions: 0
+Time taken to verify inverse: 4.20938 seconds
+==PROF== Disconnected from process 3439425
+==PROF== Report: /nfs/c3po/home/ge47gem/final/matrixInversion/subwarp/no_swzl/benchmark_results/ncu_profiles/profile_m17_n1000000_t17.ncu-rep
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function '_Z18batched_lu_subwarpIfLi18ELi18ELi1ELi1000000EEvPT_' for 'sm_86'
+ptxas info    : Function properties for _Z18batched_lu_subwarpIfLi18ELi18ELi1ELi1000000EEvPT_
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 74 registers, 360 bytes cmem[0]
+==PROF== Connected to process 3439532 (/nfs/c3po/home/ge47gem/final/matrixInversion/subwarp/no_swzl/custom)
+==PROF== Profiling "batched_lu_subwarp" - 1: 0%....50%....100% - 35 passes
+Matrix size: 18
+Number of matrices: 1000000
+Number of threads per block: 18
+Threads per matrix: 18
+Matrices per block: 1
+Number of blocks: 1000000
+Reading data from file.
+Data read from file.
+Data copied to device.
+Kernel execution time: 5535.86 milliseconds
+Data copied back to host.
+Correct inversions: 1000000
+Incorrect inversions: 0
+Time taken to verify inverse: 5.22482 seconds
+==PROF== Disconnected from process 3439532
+==PROF== Report: /nfs/c3po/home/ge47gem/final/matrixInversion/subwarp/no_swzl/benchmark_results/ncu_profiles/profile_m18_n1000000_t18.ncu-rep
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function '_Z18batched_lu_subwarpIfLi19ELi19ELi1ELi1000000EEvPT_' for 'sm_86'
+ptxas info    : Function properties for _Z18batched_lu_subwarpIfLi19ELi19ELi1ELi1000000EEvPT_
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 56 registers, 360 bytes cmem[0]
+==PROF== Connected to process 3439630 (/nfs/c3po/home/ge47gem/final/matrixInversion/subwarp/no_swzl/custom)
+==PROF== Profiling "batched_lu_subwarp" - 1: 0%....50%....100% - 35 passes
+Matrix size: 19
+Number of matrices: 1000000
+Number of threads per block: 19
+Threads per matrix: 19
+Matrices per block: 1
+Number of blocks: 1000000
+Reading data from file.
+Data read from file.
+Data copied to device.
+Kernel execution time: 7761.99 milliseconds
+Data copied back to host.
+Correct inversions: 1000000
+Incorrect inversions: 0
+Time taken to verify inverse: 6.44947 seconds
+==PROF== Disconnected from process 3439630
+==PROF== Report: /nfs/c3po/home/ge47gem/final/matrixInversion/subwarp/no_swzl/benchmark_results/ncu_profiles/profile_m19_n1000000_t19.ncu-rep
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function '_Z18batched_lu_subwarpIfLi20ELi20ELi1ELi1000000EEvPT_' for 'sm_86'
+ptxas info    : Function properties for _Z18batched_lu_subwarpIfLi20ELi20ELi1ELi1000000EEvPT_
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 75 registers, 360 bytes cmem[0]
+==PROF== Connected to process 3439722 (/nfs/c3po/home/ge47gem/final/matrixInversion/subwarp/no_swzl/custom)
+==PROF== Profiling "batched_lu_subwarp" - 1: 0%....50%....100% - 35 passes
+Matrix size: 20
+Number of matrices: 1000000
+Number of threads per block: 20
+Threads per matrix: 20
+Matrices per block: 1
+Number of blocks: 1000000
+Reading data from file.
+Data read from file.
+Data copied to device.
+Kernel execution time: 6323.94 milliseconds
+Data copied back to host.
+Correct inversions: 1000000
+Incorrect inversions: 0
+Time taken to verify inverse: 5.70671 seconds
+==PROF== Disconnected from process 3439722
+==PROF== Report: /nfs/c3po/home/ge47gem/final/matrixInversion/subwarp/no_swzl/benchmark_results/ncu_profiles/profile_m20_n1000000_t20.ncu-rep
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function '_Z18batched_lu_subwarpIfLi21ELi21ELi1ELi1000000EEvPT_' for 'sm_86'
+ptxas info    : Function properties for _Z18batched_lu_subwarpIfLi21ELi21ELi1ELi1000000EEvPT_
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 58 registers, 360 bytes cmem[0]
+==PROF== Connected to process 3439814 (/nfs/c3po/home/ge47gem/final/matrixInversion/subwarp/no_swzl/custom)
+==PROF== Profiling "batched_lu_subwarp" - 1: 0%....50%....100% - 35 passes
+Matrix size: 21
+Number of matrices: 1000000
+Number of threads per block: 21
+Threads per matrix: 21
+Matrices per block: 1
+Number of blocks: 1000000
+Reading data from file.
+Data read from file.
+Data copied to device.
+Kernel execution time: 8937.02 milliseconds
+Data copied back to host.
+Correct inversions: 1000000
+Incorrect inversions: 0
+Time taken to verify inverse: 7.09688 seconds
+==PROF== Disconnected from process 3439814
+==PROF== Report: /nfs/c3po/home/ge47gem/final/matrixInversion/subwarp/no_swzl/benchmark_results/ncu_profiles/profile_m21_n1000000_t21.ncu-rep
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function '_Z18batched_lu_subwarpIfLi22ELi22ELi1ELi1000000EEvPT_' for 'sm_86'
+ptxas info    : Function properties for _Z18batched_lu_subwarpIfLi22ELi22ELi1ELi1000000EEvPT_
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 80 registers, 360 bytes cmem[0]
+==PROF== Connected to process 3439925 (/nfs/c3po/home/ge47gem/final/matrixInversion/subwarp/no_swzl/custom)
+==PROF== Profiling "batched_lu_subwarp" - 1: 0%....50%....100% - 35 passes
+Matrix size: 22
+Number of matrices: 1000000
+Number of threads per block: 22
+Threads per matrix: 22
+Matrices per block: 1
+Number of blocks: 1000000
+Reading data from file.
+Data read from file.
+Data copied to device.
+Kernel execution time: 7523.62 milliseconds
+Data copied back to host.
+Correct inversions: 1000000
+Incorrect inversions: 0
+Time taken to verify inverse: 9.27091 seconds
+==PROF== Disconnected from process 3439925
+==PROF== Report: /nfs/c3po/home/ge47gem/final/matrixInversion/subwarp/no_swzl/benchmark_results/ncu_profiles/profile_m22_n1000000_t22.ncu-rep
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function '_Z18batched_lu_subwarpIfLi23ELi23ELi1ELi1000000EEvPT_' for 'sm_86'
+ptxas info    : Function properties for _Z18batched_lu_subwarpIfLi23ELi23ELi1ELi1000000EEvPT_
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 60 registers, 360 bytes cmem[0]
+==PROF== Connected to process 3440029 (/nfs/c3po/home/ge47gem/final/matrixInversion/subwarp/no_swzl/custom)
+==PROF== Profiling "batched_lu_subwarp" - 1: 0%....50%....100% - 35 passes
+Matrix size: 23
+Number of matrices: 1000000
+Number of threads per block: 23
+Threads per matrix: 23
+Matrices per block: 1
+Number of blocks: 1000000
+Reading data from file.
+Data read from file.
+Data copied to device.
+Kernel execution time: 10424.8 milliseconds
+Data copied back to host.
+Correct inversions: 1000000
+Incorrect inversions: 0
+Time taken to verify inverse: 10.8263 seconds
+==PROF== Disconnected from process 3440029
+==PROF== Report: /nfs/c3po/home/ge47gem/final/matrixInversion/subwarp/no_swzl/benchmark_results/ncu_profiles/profile_m23_n1000000_t23.ncu-rep
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function '_Z18batched_lu_subwarpIfLi24ELi24ELi1ELi1000000EEvPT_' for 'sm_86'
+ptxas info    : Function properties for _Z18batched_lu_subwarpIfLi24ELi24ELi1ELi1000000EEvPT_
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 80 registers, 360 bytes cmem[0]
+==PROF== Connected to process 3440127 (/nfs/c3po/home/ge47gem/final/matrixInversion/subwarp/no_swzl/custom)
+==PROF== Profiling "batched_lu_subwarp" - 1: 0%....50%....100% - 35 passes
+Matrix size: 24
+Number of matrices: 1000000
+Number of threads per block: 24
+Threads per matrix: 24
+Matrices per block: 1
+Number of blocks: 1000000
+Reading data from file.
+Data read from file.
+Data copied to device.
+Kernel execution time: 7843.13 milliseconds
+Data copied back to host.
+Correct inversions: 1000000
+Incorrect inversions: 0
+Time taken to verify inverse: 8.87611 seconds
+==PROF== Disconnected from process 3440127
+==PROF== Report: /nfs/c3po/home/ge47gem/final/matrixInversion/subwarp/no_swzl/benchmark_results/ncu_profiles/profile_m24_n1000000_t24.ncu-rep
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function '_Z18batched_lu_subwarpIfLi25ELi25ELi1ELi1000000EEvPT_' for 'sm_86'
+ptxas info    : Function properties for _Z18batched_lu_subwarpIfLi25ELi25ELi1ELi1000000EEvPT_
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 61 registers, 360 bytes cmem[0]
+==PROF== Connected to process 3440241 (/nfs/c3po/home/ge47gem/final/matrixInversion/subwarp/no_swzl/custom)
+==PROF== Profiling "batched_lu_subwarp" - 1: 0%....50%....100% - 35 passes
+Matrix size: 25
+Number of matrices: 1000000
+Number of threads per block: 25
+Threads per matrix: 25
+Matrices per block: 1
+Number of blocks: 1000000
+Reading data from file.
+Data read from file.
+Data copied to device.
+Kernel execution time: 11749.1 milliseconds
+Data copied back to host.
+Correct inversions: 1000000
+Incorrect inversions: 0
+Time taken to verify inverse: 11.2865 seconds
+==PROF== Disconnected from process 3440241
+==PROF== Report: /nfs/c3po/home/ge47gem/final/matrixInversion/subwarp/no_swzl/benchmark_results/ncu_profiles/profile_m25_n1000000_t25.ncu-rep
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function '_Z18batched_lu_subwarpIfLi26ELi26ELi1ELi1000000EEvPT_' for 'sm_86'
+ptxas info    : Function properties for _Z18batched_lu_subwarpIfLi26ELi26ELi1ELi1000000EEvPT_
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 82 registers, 360 bytes cmem[0]
+==PROF== Connected to process 3440345 (/nfs/c3po/home/ge47gem/final/matrixInversion/subwarp/no_swzl/custom)
+==PROF== Profiling "batched_lu_subwarp" - 1: 0%....50%....100% - 35 passes
+Matrix size: 26
+Number of matrices: 1000000
+Number of threads per block: 26
+Threads per matrix: 26
+Matrices per block: 1
+Number of blocks: 1000000
+Reading data from file.
+Data read from file.
+Data copied to device.
+Kernel execution time: 9469.36 milliseconds
+Data copied back to host.
+Correct inversions: 1000000
+Incorrect inversions: 0
+Time taken to verify inverse: 13.8648 seconds
+==PROF== Disconnected from process 3440345
+==PROF== Report: /nfs/c3po/home/ge47gem/final/matrixInversion/subwarp/no_swzl/benchmark_results/ncu_profiles/profile_m26_n1000000_t26.ncu-rep
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function '_Z18batched_lu_subwarpIfLi27ELi27ELi1ELi1000000EEvPT_' for 'sm_86'
+ptxas info    : Function properties for _Z18batched_lu_subwarpIfLi27ELi27ELi1ELi1000000EEvPT_
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 64 registers, 360 bytes cmem[0]
+==PROF== Connected to process 3440442 (/nfs/c3po/home/ge47gem/final/matrixInversion/subwarp/no_swzl/custom)
+==PROF== Profiling "batched_lu_subwarp" - 1: 0%....50%....100% - 35 passes
+Matrix size: 27
+Number of matrices: 1000000
+Number of threads per block: 27
+Threads per matrix: 27
+Matrices per block: 1
+Number of blocks: 1000000
+Reading data from file.
+Data read from file.
+Data copied to device.
+Kernel execution time: 13323.4 milliseconds
+Data copied back to host.
+Correct inversions: 1000000
+Incorrect inversions: 0
+Time taken to verify inverse: 15.8793 seconds
+==PROF== Disconnected from process 3440442
+==PROF== Report: /nfs/c3po/home/ge47gem/final/matrixInversion/subwarp/no_swzl/benchmark_results/ncu_profiles/profile_m27_n1000000_t27.ncu-rep
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function '_Z18batched_lu_subwarpIfLi28ELi28ELi1ELi1000000EEvPT_' for 'sm_86'
+ptxas info    : Function properties for _Z18batched_lu_subwarpIfLi28ELi28ELi1ELi1000000EEvPT_
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 84 registers, 360 bytes cmem[0]
+==PROF== Connected to process 3440567 (/nfs/c3po/home/ge47gem/final/matrixInversion/subwarp/no_swzl/custom)
+==PROF== Profiling "batched_lu_subwarp" - 1: 0%....50%....100% - 35 passes
+Matrix size: 28
+Number of matrices: 1000000
+Number of threads per block: 28
+Threads per matrix: 28
+Matrices per block: 1
+Number of blocks: 1000000
+Reading data from file.
+Data read from file.
+Data copied to device.
+Kernel execution time: 11487.3 milliseconds
+Data copied back to host.
+Correct inversions: 1000000
+Incorrect inversions: 0
+Time taken to verify inverse: 12.7564 seconds
+==PROF== Disconnected from process 3440567
+==PROF== Report: /nfs/c3po/home/ge47gem/final/matrixInversion/subwarp/no_swzl/benchmark_results/ncu_profiles/profile_m28_n1000000_t28.ncu-rep
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function '_Z18batched_lu_subwarpIfLi29ELi29ELi1ELi1000000EEvPT_' for 'sm_86'
+ptxas info    : Function properties for _Z18batched_lu_subwarpIfLi29ELi29ELi1ELi1000000EEvPT_
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 66 registers, 360 bytes cmem[0]
+==PROF== Connected to process 3440673 (/nfs/c3po/home/ge47gem/final/matrixInversion/subwarp/no_swzl/custom)
+==PROF== Profiling "batched_lu_subwarp" - 1: 0%....50%....100% - 35 passes
+Matrix size: 29
+Number of matrices: 1000000
+Number of threads per block: 29
+Threads per matrix: 29
+Matrices per block: 1
+Number of blocks: 1000000
+Reading data from file.
+Data read from file.
+Data copied to device.
+Kernel execution time: 18477.2 milliseconds
+Data copied back to host.
+Correct inversions: 1000000
+Incorrect inversions: 0
+Time taken to verify inverse: 16.2309 seconds
+==PROF== Disconnected from process 3440673
+==PROF== Report: /nfs/c3po/home/ge47gem/final/matrixInversion/subwarp/no_swzl/benchmark_results/ncu_profiles/profile_m29_n1000000_t29.ncu-rep
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function '_Z18batched_lu_subwarpIfLi30ELi30ELi1ELi1000000EEvPT_' for 'sm_86'
+ptxas info    : Function properties for _Z18batched_lu_subwarpIfLi30ELi30ELi1ELi1000000EEvPT_
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 86 registers, 360 bytes cmem[0]
+==PROF== Connected to process 3441191 (/nfs/c3po/home/ge47gem/final/matrixInversion/subwarp/no_swzl/custom)
+==PROF== Profiling "batched_lu_subwarp" - 1: 0%....50%....100% - 35 passes
+Matrix size: 30
+Number of matrices: 1000000
+Number of threads per block: 30
+Threads per matrix: 30
+Matrices per block: 1
+Number of blocks: 1000000
+Reading data from file.
+Data read from file.
+Data copied to device.
+Kernel execution time: 13889.9 milliseconds
+Data copied back to host.
+Correct inversions: 1000000
+Incorrect inversions: 0
+Time taken to verify inverse: 19.0758 seconds
+==PROF== Disconnected from process 3441191
+==PROF== Report: /nfs/c3po/home/ge47gem/final/matrixInversion/subwarp/no_swzl/benchmark_results/ncu_profiles/profile_m30_n1000000_t30.ncu-rep
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function '_Z18batched_lu_subwarpIfLi31ELi31ELi1ELi1000000EEvPT_' for 'sm_86'
+ptxas info    : Function properties for _Z18batched_lu_subwarpIfLi31ELi31ELi1ELi1000000EEvPT_
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 69 registers, 360 bytes cmem[0]
+==PROF== Connected to process 3441317 (/nfs/c3po/home/ge47gem/final/matrixInversion/subwarp/no_swzl/custom)
+==PROF== Profiling "batched_lu_subwarp" - 1: 0%....50%....100% - 35 passes
+Matrix size: 31
+Number of matrices: 1000000
+Number of threads per block: 31
+Threads per matrix: 31
+Matrices per block: 1
+Number of blocks: 1000000
+Reading data from file.
+Data read from file.
+Data copied to device.
+Kernel execution time: 20802.1 milliseconds
+Data copied back to host.
+Correct inversions: 1000000
+Incorrect inversions: 0
+Time taken to verify inverse: 21.9799 seconds
+==PROF== Disconnected from process 3441317
+==PROF== Report: /nfs/c3po/home/ge47gem/final/matrixInversion/subwarp/no_swzl/benchmark_results/ncu_profiles/profile_m31_n1000000_t31.ncu-rep
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function '_Z18batched_lu_subwarpIfLi32ELi32ELi1ELi1000000EEvPT_' for 'sm_86'
+ptxas info    : Function properties for _Z18batched_lu_subwarpIfLi32ELi32ELi1ELi1000000EEvPT_
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 93 registers, 360 bytes cmem[0]
+==PROF== Connected to process 3441594 (/nfs/c3po/home/ge47gem/final/matrixInversion/subwarp/no_swzl/custom)
+==PROF== Profiling "batched_lu_subwarp" - 1: 0%....50%....100% - 35 passes
+Matrix size: 32
+Number of matrices: 1000000
+Number of threads per block: 32
+Threads per matrix: 32
+Matrices per block: 1
+Number of blocks: 1000000
+Reading data from file.
+Data read from file.
+Data copied to device.
+Kernel execution time: 13755.7 milliseconds
+Data copied back to host.
+Correct inversions: 1000000
+Incorrect inversions: 0
+Time taken to verify inverse: 17.4895 seconds
+==PROF== Disconnected from process 3441594
+==PROF== Report: /nfs/c3po/home/ge47gem/final/matrixInversion/subwarp/no_swzl/benchmark_results/ncu_profiles/profile_m32_n1000000_t32.ncu-rep
+Modules loaded successfully
+Loaded modules are:  ['cuda-11.6.0', 'openmpi-4.0.2', 'binutils-2.41-static']
+
+Testing configuration: Matrix Size=1, Num Matrices=1000000
+Number of threads: 32
+Runtime: 0.039648
+
+Testing configuration: Matrix Size=2, Num Matrices=1000000
+Number of threads: 32
+Runtime: 0.081792
+
+Testing configuration: Matrix Size=3, Num Matrices=1000000
+Number of threads: 30
+Runtime: 0.197568
+
+Testing configuration: Matrix Size=4, Num Matrices=1000000
+Number of threads: 32
+Runtime: 0.36496
+
+Testing configuration: Matrix Size=5, Num Matrices=1000000
+Number of threads: 30
+Runtime: 0.584384
+
+Testing configuration: Matrix Size=6, Num Matrices=1000000
+Number of threads: 30
+Runtime: 0.656128
+
+Testing configuration: Matrix Size=7, Num Matrices=1000000
+Number of threads: 28
+Runtime: 1.13581
+
+Testing configuration: Matrix Size=8, Num Matrices=1000000
+Number of threads: 32
+Runtime: 1.96122
+
+Testing configuration: Matrix Size=9, Num Matrices=1000000
+Number of threads: 27
+Runtime: 2.28173
+
+Testing configuration: Matrix Size=10, Num Matrices=1000000
+Number of threads: 30
+Runtime: 2.09632
+
+Testing configuration: Matrix Size=11, Num Matrices=1000000
+Number of threads: 22
+Runtime: 4.77651
+
+Testing configuration: Matrix Size=12, Num Matrices=1000000
+Number of threads: 24
+Runtime: 3.67296
+
+Testing configuration: Matrix Size=13, Num Matrices=1000000
+Number of threads: 26
+Runtime: 6.40067
+
+Testing configuration: Matrix Size=14, Num Matrices=1000000
+Number of threads: 28
+Runtime: 5.05014
+
+Testing configuration: Matrix Size=15, Num Matrices=1000000
+Number of threads: 30
+Runtime: 8.29411
+
+Testing configuration: Matrix Size=16, Num Matrices=1000000
+Number of threads: 32
+Runtime: 8.09078
+
+Testing configuration: Matrix Size=17, Num Matrices=1000000
+Number of threads: 17
+Runtime: 20.7708
+
+Testing configuration: Matrix Size=18, Num Matrices=1000000
+Number of threads: 18
+Runtime: 15.0586
+
+Testing configuration: Matrix Size=19, Num Matrices=1000000
+Number of threads: 19
+Runtime: 25.5104
+
+Testing configuration: Matrix Size=20, Num Matrices=1000000
+Number of threads: 20
+Runtime: 16.8916
+
+Testing configuration: Matrix Size=21, Num Matrices=1000000
+Number of threads: 21
+Runtime: 30.743
+
+Testing configuration: Matrix Size=22, Num Matrices=1000000
+Number of threads: 22
+Runtime: 21.3058
+
+Testing configuration: Matrix Size=23, Num Matrices=1000000
+Number of threads: 23
+Runtime: 36.4731
+
+Testing configuration: Matrix Size=24, Num Matrices=1000000
+Number of threads: 24
+Runtime: 23.4448
+
+Testing configuration: Matrix Size=25, Num Matrices=1000000
+Number of threads: 25
+Runtime: 42.6836
+
+Testing configuration: Matrix Size=26, Num Matrices=1000000
+Number of threads: 26
+Runtime: 29.3548
+
+Testing configuration: Matrix Size=27, Num Matrices=1000000
+Number of threads: 27
+Runtime: 49.3865
+
+Testing configuration: Matrix Size=28, Num Matrices=1000000
+Number of threads: 28
+Runtime: 30.5276
+
+Testing configuration: Matrix Size=29, Num Matrices=1000000
+Number of threads: 29
+Runtime: 56.5775
+
+Testing configuration: Matrix Size=30, Num Matrices=1000000
+Number of threads: 30
+Runtime: 37.9748
+
+Testing configuration: Matrix Size=31, Num Matrices=1000000
+Number of threads: 31
+Runtime: 64.2546
+
+Testing configuration: Matrix Size=32, Num Matrices=1000000
+Number of threads: 32
+Runtime: 55.5703
