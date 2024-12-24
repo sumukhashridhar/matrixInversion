@@ -13,30 +13,46 @@ namespace cg = cooperative_groups;
 
 
 template<typename T>
-__device__ __forceinline__ void swap_rows(T* A, int row1, int row2, int matrixSize) {
-    #pragma unroll
-    for (int j = 0; j < matrixSize; j++) {
-        T temp = A[row1 * matrixSize + j];
+__device__ __forceinline__ void find_pivot_parallel(T* A, int k, int matrixSize, int threadIdInMatrix, 
+    int threadsPerMatrix, T* local_max_vals, int* local_max_indices) {
+    int thread_max_idx = k;
+    T val = static_cast<T>(0.0), thread_max_val = static_cast<T>(0.0);
+    bool is_larger = false;
+    
+    for (int i = k + 1 + threadIdInMatrix; i < matrixSize; i += threadsPerMatrix) {
+        val = abs(A[i * matrixSize + k]);
+        is_larger = (val > thread_max_val);
+        thread_max_val = is_larger ? val : thread_max_val;
+        thread_max_idx = is_larger ? i : thread_max_idx;
+    }
+    
+    local_max_vals[threadIdInMatrix] = thread_max_val;
+    local_max_indices[threadIdInMatrix] = thread_max_idx;
+    __syncthreads();
+    
+    for (int stride = threadsPerMatrix/2; stride > 0; stride >>= 1) {
+        if (threadIdInMatrix < stride) {
+            if (local_max_vals[threadIdInMatrix] < local_max_vals[threadIdInMatrix + stride]) {
+                local_max_vals[threadIdInMatrix] = local_max_vals[threadIdInMatrix + stride];
+                local_max_indices[threadIdInMatrix] = local_max_indices[threadIdInMatrix + stride];
+            }
+        }
+        __syncthreads();
+    }
+}
+
+template<typename T>
+__device__ __forceinline__ void row_swap_parallel(T* A, int row1, int row2, int matrixSize, 
+    int threadIdInMatrix, int threadsPerMatrix) {
+    T temp = static_cast<T>(0.0);
+
+    for (int j = threadIdInMatrix; j < matrixSize; j += threadsPerMatrix) {
+        temp = A[row1 * matrixSize + j];
         A[row1 * matrixSize + j] = A[row2 * matrixSize + j];
         A[row2 * matrixSize + j] = temp;
     }
 }
 
-template<typename T>
-__device__ __forceinline__ int find_pivot(T* A, int k, int matrixSize) {
-    int pivot_row = k;
-    T max_val = abs(A[k * matrixSize + k]);
-    
-    #pragma unroll
-    for (int i = k + 1; i < matrixSize; i++) {
-        T val = abs(A[i * matrixSize + k]);
-        if (val > max_val) {
-            max_val = val;
-            pivot_row = i;
-        }
-    }
-    return pivot_row;
-}
 
 template<typename T>
 __device__ __forceinline__ void comp_U(T* A, int* pivots, int rowIdx, int colIdx, int matrixSize, int threadsPerMatrix) {
@@ -65,13 +81,11 @@ __device__ __forceinline__ void comp_L(T* A, int* pivots, int rowIdx, int colIdx
 template<typename T>
 __device__ __forceinline__ void comp_inv(T* A, int* pivots, int colIdx, int matrixSize) {
     T y[32];
-    T x[32];
 
     // init arrays
     #pragma unroll
     for (int i = 0; i < matrixSize; i++) {
         y[i] = static_cast<T>(0.0);
-        x[i] = static_cast<T>(0.0);
     }
 
     // forward substitution
@@ -93,14 +107,9 @@ __device__ __forceinline__ void comp_inv(T* A, int* pivots, int colIdx, int matr
         T sum = static_cast<T>(0.0);
         #pragma unroll 
         for (int j = i+1; j < matrixSize; j++) {
-            sum += A[(i * matrixSize) + j] * x[j];
+            sum += A[(i * matrixSize) + j] * A[(j * matrixSize) + colIdx];
         }
-        x[i] = (y[i] - sum) / A[(i * matrixSize) + i];
-    }
-
-    #pragma unroll
-    for (int i = 0; i < matrixSize; i++) {
-        A[(i * matrixSize) + colIdx] = x[i];
+        A[(i * matrixSize) + colIdx] = (y[i] - sum) / A[(i * matrixSize) + i];
     }
 }
 
@@ -115,8 +124,11 @@ __global__ void batched_lu_subwarp(T* A) {
         int mtrxOffset = globalMatrixId * numElements;
         
         extern __shared__ T shmem[];
-        T* sh_A = &shmem[matrixIdInBlock * (numElements + matrixSize) + 1];
+        T* sh_A = &shmem[matrixIdInBlock * (numElements + matrixSize + 2 * threadsPerMatrix)];
         int* pivots = (int*)(&sh_A[numElements]);
+
+        T* local_max_vals = (T*)(&pivots[matrixSize]);
+        int* local_max_indices = (int*)(&local_max_vals[threadsPerMatrix]);
 
         // init pivots
         if (threadIdInMatrix < matrixSize) {
@@ -131,14 +143,23 @@ __global__ void batched_lu_subwarp(T* A) {
 
         #pragma unroll 8
         for (int rowIdx = 0; rowIdx < matrixSize; rowIdx++) {
+
+            find_pivot_parallel(sh_A, rowIdx, matrixSize, threadIdInMatrix, 
+                threadsPerMatrix, local_max_vals, local_max_indices);
+            
             if (threadIdInMatrix == 0) {
-                int pivot_row = find_pivot(sh_A, rowIdx, matrixSize);
+                int pivot_row = local_max_indices[0];
                 if (pivot_row != rowIdx) {
-                    swap_rows(sh_A, rowIdx, pivot_row, matrixSize);
                     int temp = pivots[rowIdx];
                     pivots[rowIdx] = pivots[pivot_row];
                     pivots[pivot_row] = temp;
                 }
+            }
+            __syncthreads();
+            
+            if (local_max_indices[0] != rowIdx) {
+                row_swap_parallel(sh_A, rowIdx, local_max_indices[0], matrixSize, 
+                    threadIdInMatrix, threadsPerMatrix);
             }
             __syncthreads();
 
