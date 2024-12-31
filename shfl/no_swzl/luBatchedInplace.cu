@@ -6,6 +6,7 @@ int main() {
     constexpr int numThreads=NUMTHREADS;
 
     const int threadsPerMatrix = matrixSize;
+    // const int threadsPerMatrix = 32;
     const int matricesPerBlock = numThreads / threadsPerMatrix;
     const int numBlocks = numMatrices / matricesPerBlock;
 
@@ -17,7 +18,7 @@ int main() {
     std::cout << "Number of blocks: " << numBlocks << '\n';
 
     // FpType inputMatrix[] = {2, 3, 4, 5};//, 10, 4, 2, 4, 2};
-     FpType inputMatrix[] = {4, 11, 3, 4, 10, 4, 2, 4, 2};
+    //  FpType inputMatrix[] = {4, 11, 3, 4, 10, 4, 2, 4, 2};
     // FpType inputMatrix[] = {2, 7, 1, 5, 3, -2, 0, 1, 1, 5, 3, 4, 7, 3, 2, 8};
     // make input matrix as Identity matrix
     // FpType inputMatrix[] = {10, 0, 0, 0, 0, 10, 0, 0, 0, 0, 10, 0, 0, 0, 0, 10};
@@ -29,22 +30,35 @@ int main() {
 
     std::cout << "Reading data from file." << '\n';
 
-        #pragma acc parallel loop
-        for (int k = 0; k < numMatrices; ++k) {
-            int offset = k * matrixSize * matrixSize;
-            // std::ifstream file("main_mtrx.txt");
-            std::ifstream file("matrix.txt");
-            
-            #pragma acc loop vector
-            for (int i = 0; i < matrixSize; ++i) {
-                for (int j = 0; j < matrixSize; ++j) {
-                    file >> A[(i * matrixSize) + offset + j];
-                    A_inv[(i * matrixSize) + offset + j] = static_cast<FpType>(0.0);
-                }
-            }
-            file.close();
-        }
+    // Read the file once into a single matrix-sized buffer
+    std::ifstream file("matrix.txt");
+    std::vector<FpType> templateMatrix(matrixSize * matrixSize);
+    for (int i = 0; i < matrixSize * matrixSize; ++i) {
+        file >> templateMatrix[i];
+    }
+    file.close();
 
+    auto startT = std::chrono::high_resolution_clock::now();
+    auto endT = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed = endT - startT;
+
+    startT = std::chrono::high_resolution_clock::now();
+    #pragma acc parallel loop
+    for (int k = 0; k < numMatrices; ++k) {
+        int offset = k * matrixSize * matrixSize;
+        
+        #pragma acc loop vector
+        for (int i = 0; i < matrixSize; ++i) {
+            for (int j = 0; j < matrixSize; ++j) {
+                int templateIndex = (i * matrixSize) + j;
+                A[(i * matrixSize) + offset + j] = templateMatrix[templateIndex];
+                A_inv[(i * matrixSize) + offset + j] = static_cast<FpType>(0.0);
+            }
+        }
+    }
+    endT = std::chrono::high_resolution_clock::now();
+    elapsed = endT - startT;
+    std::cout << "Time taken to read data: " << elapsed.count() << " seconds\n";
     std::cout << "Data read from file." << '\n';
 
     FpType* d_A;
@@ -81,11 +95,11 @@ int main() {
     // auto filename = "8thread32_mtrx.txt";
     // writeToFile(A_inv, filename, matrixSize, numMatrices);
 
-    auto startT = std::chrono::high_resolution_clock::now();
+    startT = std::chrono::high_resolution_clock::now();
     verifyInv(A, A_inv, matrixSize, numMatrices);
     // verifyLU(A, A_inv, matrixSize, numMatrices);
-    auto endT = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> elapsed = endT - startT;
+    endT = std::chrono::high_resolution_clock::now();
+    elapsed = endT - startT;
     std::cout << "Time taken to verify inverse: " << elapsed.count() << " seconds\n";
 
     cudaFree(d_A);
