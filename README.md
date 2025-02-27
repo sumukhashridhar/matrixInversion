@@ -23,7 +23,7 @@ using single precision arithmetic on RTX 3080 GPU.
     <td><img src="images/par_piv_speedup.png" width="300"></td>
   </tr>
   <tr>
-    <td colspan="2" align="center"><b>Caption: This is a description for both images.</b></td>
+    <td colspan="2" align="center"><b>Speedup over cuBLAS</b></td>
   </tr>
 </table>
 
