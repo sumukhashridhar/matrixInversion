@@ -15,6 +15,20 @@ achieve an average speedup of 4x and 6.5x performance speed-up in terms of
 runtime compared to cuBLAS, with and without pivoting during the LU decomposition,
 using single precision arithmetic on RTX 3080 GPU.
 
+### Speedup
+
+<table>
+  <tr>
+    <td><img src="images/no_swzl_speedup.png" width="300"></td>
+    <td><img src="images/par_piv_speedup.png" width="300"></td>
+  </tr>
+  <tr>
+    <td colspan="2" align="center"><b>Caption: This is a description for both images.</b></td>
+  </tr>
+</table>
+
+
+
 ### Concusion
 
 We presented six different implementations for computing the batched matrix inversion
